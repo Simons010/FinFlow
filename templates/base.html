@@ -1,0 +1,192 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en" class="">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}FinFlow - Financial Management{% endblock %}</title>
+
+    <link rel="stylesheet" href="{% static 'css/output.css' %}">
+    <link rel="stylesheet" href="{% static 'css/custom.css' %}">
+
+    {% block extra_css %}{% endblock %}
+</head>
+
+<body class="bg-background text-foreground">
+
+{% if user.is_authenticated %}
+<div class="flex flex-col lg:flex-row h-screen lg:overflow-hidden">
+
+    <!-- MOBILE SIDEBAR (Floating) -->
+    <div id="mobile-menu" class="fixed inset-0 bg-black/40 z-50 hidden">
+        <div class="bg-card w-64 h-full p-4 shadow-xl transform -translate-x-full transition-transform" id="mobile-sidebar">
+            <div class="flex items-center justify-between mb-4">
+                <h2 class="text-lg font-bold">Navigation</h2>
+                <button id="mobile-close" class="text-2xl">✕</button>
+            </div>
+
+            <nav class="space-y-2">
+                <a href="{% url 'finflow:dashboard' %}" class="block px-4 py-2 rounded hover:bg-muted {% if request.resolver_match.url_name == 'dashboard' %}bg-accent text-accent-foreground{% endif %}">📊 Dashboard</a>
+                <a href="{% url 'finflow:transactions' %}" class="block px-4 py-2 rounded hover:bg-muted {% if request.resolver_match.url_name == 'transactions' %}bg-accent text-accent-foreground{% endif %}">💳 Transactions</a>
+                <a href="{% url 'finflow:categories' %}" class="block px-4 py-2 rounded hover:bg-muted {% if request.resolver_match.url_name == 'categories' %}bg-accent text-accent-foreground{% endif %}">📁 Categories</a>
+                <a href="{% url 'finflow:reports' %}" class="block px-4 py-2 rounded hover:bg-muted {% if request.resolver_match.url_name == 'reports' %}bg-accent text-accent-foreground{% endif %}">📈 Reports</a>
+                <a href="{% url 'finflow:settings' %}" class="block px-4 py-2 rounded hover:bg-muted {% if request.resolver_match.url_name == 'settings' %}bg-accent text-accent-foreground{% endif %}">⚙️ Settings</a>
+            </nav>
+
+            <div class="absolute bottom-0 border-border user-info mt-6 border-t pt-4 mb-3">
+                <div class="flex items-center gap-3 mb-3">
+                    <div class="w-10 h-10 rounded-full bg-accent text-white flex items-center justify-center font-bold">
+                        {{ user.username|first|upper }}
+                    </div>
+                    <div>
+                        <p class="text-sm font-medium">{{ user.get_full_name|default:user.username }}</p>
+                        <p class="text-xs text-muted-foreground">{{ user.email }}</p>
+                    </div>
+                </div>
+
+                <form method="POST" action="{% url 'logout' %}">
+                    {% csrf_token %}
+                    <button class="w-full px-4 py-2 rounded-lg bg-destructive text-white">Logout</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- DESKTOP SIDEBAR -->
+    <aside id="sidebar" class="hidden lg:flex flex-col bg-card border-r border-border w-64 transition-all duration-300 overflow-visible">
+        <div class="company-info flex-col items-center gap-3 p-2 border-b border-border mb-3">
+            <div class="flex gap-4 items-center py-6 px-2">
+                <div class="w-14 h-14 rounded-full overflow-hidden flex items-center justify-center">
+                    <img src="{% static 'images/FinFlow-logo.png' %}"
+                        alt="FinFlow-Logo"
+                        class="w-full h-full object-contain">
+                </div>
+                
+                <div class="more-info">
+                    <p class="text-2xl font-bold text-accent bg-inherit leading-none whitespace-normal shrink-0">
+                        FinFlow
+                    </p>
+                </div>
+            </div>
+            <p class="more-info text-sm text-muted-foreground mt-1 px-3">
+                Financial Management Assistant
+            </p>
+        </div>
+
+
+        <nav class="space-y-2 px-4 flex-1">
+            <a href="{% url 'finflow:dashboard' %}" class="flex items-center gap-3 px-3 py-2 rounded-lg transition-colors hover:bg-muted {% if request.resolver_match.url_name == 'dashboard' %}bg-accent text-accent-foreground{% endif %}">📊 <span class="nav-label">Dashboard</span></a>
+            <a href="{% url 'finflow:transactions' %}" class="flex items-center gap-3 px-3 py-2 rounded-lg transition-colors hover:bg-muted {% if request.resolver_match.url_name == 'transactions' %}bg-accent text-accent-foreground{% endif %}">💳 <span class="nav-label">Transactions</span></a>
+            <a href="{% url 'finflow:categories' %}" class="flex items-center gap-3 px-3 py-2 rounded-lg transition-colors hover:bg-muted {% if request.resolver_match.url_name == 'categories' %}bg-accent text-accent-foreground{% endif %}">📁 <span class="nav-label">Categories</span></a>
+            <a href="{% url 'finflow:reports' %}" class="flex items-center gap-3 px-3 py-2 rounded-lg transition-colors hover:bg-muted {% if request.resolver_match.url_name == 'reports' %}bg-accent text-accent-foreground{% endif %}">📈 <span class="nav-label">Reports</span></a>
+            <a href="{% url 'finflow:settings' %}" class="flex items-center gap-3 px-3 py-2 rounded-lg transition-colors hover:bg-muted {% if request.resolver_match.url_name == 'settings' %}bg-accent text-accent-foreground{% endif %}">⚙️ <span class="nav-label">Settings</span></a>
+        </nav>
+
+        <div class="p-4 border-t border-border user-info">
+            <div class="flex items-center gap-3 mb-3">
+                <div class="w-10 h-10 rounded-full bg-accent text-white flex items-center justify-center font-bold">
+                    {{ user.username|first|upper }}
+                </div>
+                <div>
+                    <p class="text-sm font-medium">{{ user.get_full_name|default:user.username }}</p>
+                    <p class="text-xs text-muted-foreground">{{ user.email }}</p>
+                </div>
+            </div>
+
+            <form method="POST" action="{% url 'logout' %}">
+                {% csrf_token %}
+                <button class="w-full px-4 py-2 rounded bg-destructive text-white">Logout</button>
+            </form>
+        </div>
+    </aside>
+
+    <!-- MAIN CONTENT -->
+    <div class="flex-1 flex flex-col">
+
+        <!-- MOBILE BRAND TOP BAR (NEW) -->
+        <div id="mobile-brand-bar" class="bg-card border-b border-border p-4 flex items-center justify-between lg:hidden">
+            <div class="flex items-center justify-between w-full px-2">
+                <div>
+                    <a href="{% url 'finflow:dashboard'%}">
+                        <h1 class="text-xl font-bold text-accent mb-1">FinFlow</h1>
+                        <p class="text-s text-muted-foreground ">Financial Management Assistant</p>
+                    </a>
+                </div>
+                <!-- Placeholder Logo -->
+                <div class="w-10 h-10 rounded-full overflow-hidden flex items-center justify-center">
+                    <a href="{% url 'finflow:settings'%}" class="cursor-pointer">
+                        <img src="{% static 'images/FinFlow-logo.png' %}"
+                        alt="FinFlow-Logo"
+                        class="w-full h-full object-contain">
+                    </a>
+                </div>
+                
+            </div>
+        </div>
+
+        <!-- EXISTING TOP BAR -->
+        <header class="bg-card border-b border-border shadow-sm p-4 flex items-center justify-between">
+            <div class="flex items-center gap-3 md:gap-6">
+
+                <!-- Mobile Hamburger -->
+                <button id="mobile-open" class="lg:hidden p-2 rounded hover:bg-muted">
+                    ☰
+                </button>
+
+                <!-- Desktop Collapse Button -->
+                <button id="desktop-toggle" class="hidden lg:block p-2 rounded hover:bg-muted">
+                    ⇔
+                </button>
+
+                <h2 class="text-xl md:text-2xl font-bold truncate">
+                    {% block page_title %}{% endblock %}
+                </h2>
+            </div>
+
+            <button id="theme-toggle" class="p-2 hover:bg-muted rounded-lg">
+                <span id="theme-icon">🌙</span>
+            </button>
+        </header>
+
+        {% if messages %}
+        <div class="p-4 space-y-2">
+            {% for message in messages %}
+                <div class="p-3 rounded border
+                    {% if 'success' in message.tags %}
+                    bg-green-50 text-green-800 border-green-200
+                    {% elif 'error' in message.tags %}
+                    bg-red-50 text-red-800 border-red-200
+                    {% else %}
+                    bg-blue-50 text-blue-800 border-blue-200
+                    {% endif %}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+
+        <main class="flex-1 overflow-auto p-4 md:p-6">
+            {% block content %}{% endblock %}
+        </main>
+
+        <footer>
+        <div class="text-center text-xs text-muted-foreground p-2 border-t border-border">
+            &copy; {{ current_year }} FinFlow. All rights reserved.
+        </div>
+    </footer>
+    </div>
+</div>
+{% else %}
+
+<div class="min-h-screen flex items-center justify-center bg-gradient-to-br from-accent/10 to-accent/5">
+    {% block auth_content %}{% endblock %}
+</div>
+
+{% endif %}
+
+<script src="{% static 'js/theme.js' %}"></script>
+<script src="{% static 'js/sidebar.js' %}"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+{% block extra_js %}{% endblock %}
+</body>
+</html>

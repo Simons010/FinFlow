@@ -1,0 +1,44 @@
+# ---- Python ----
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.sqlite3
+db.sqlite3
+
+# ---- Django ----
+staticfiles/
+media/
+*.log
+
+# ---- Virtual environment ----
+venv/
+.env
+*.env
+
+# ---- Node / Tailwind ----
+node_modules/
+dist/
+build/
+
+# ---- System files ----
+.DS_Store
+Thumbs.db
+
+# ---- IDE & Editor ----
+.vscode/
+.idea/
+
+# ---- Compiled assets ----
+*.css.map
+*.js.map
+
+# ---- Package managers ----
+package-lock.json
+
+# ---- Miscellaneous ----
+DEVELOPER_GUIDE.md 
+CODE_STYLE.md 
+API_VIEWS.md
+ARCHITECTURE.md
+DEPLOYMENT.md

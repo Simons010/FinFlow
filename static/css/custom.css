@@ -1,0 +1,48 @@
+#sidebar {
+    transition: width 0.3s ease, padding 0.3s ease;
+}
+
+/* Desktop collapsed sidebar */
+@media (min-width: 1024px) {
+    body.sidebar-collapsed #sidebar {
+        width: 6rem !important;
+        padding: 0.3rem !important;
+    }
+
+    body.sidebar-collapsed #sidebar .nav-label,
+    body.sidebar-collapsed #sidebar .user-info {
+        display: none !important;
+    }
+
+    body.sidebar-collapsed #sidebar .company-info {
+        justify-content: center; /* Center logo */
+    }
+
+    body.sidebar-collapsed #sidebar .more-info {
+        display: none; /* Hide company name and tagline */
+
+    }
+
+    body.sidebar-collapsed #sidebar a {
+        justify-content: center; /* Center icons */
+    }
+}
+
+/* Mobile slide-in */
+#mobile-menu {
+    transition: transform 0.3s ease-in-out;
+}
+
+/* MOBILE BRANDING BAR */
+@media (max-width: 1023px) {
+    #mobile-brand-bar {
+        display: flex;
+    }
+}
+@media (min-width: 1024px) {
+    #mobile-brand-bar {
+        display: none;
+    }
+}
+
+

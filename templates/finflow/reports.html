@@ -1,0 +1,151 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Reports - FinFlow{% endblock %}
+{% block page_title %}Reports{% endblock %}
+
+{% block content %}
+<!-- P&L Statement -->
+<div class="grid grid-cols-1 sm:grid-cols-3 gap-3 md:gap-6 mb-6 md:mb-8">
+    <div class="bg-card border border-border rounded-lg p-4 md:p-6">
+        <p class="text-xs md:text-sm text-muted-foreground mb-2">Total Income</p>
+        <p class="text-2xl md:text-3xl font-bold text-green-600">Ksh {{ total_income|floatformat:2 }}</p>
+    </div>
+
+    <div class="bg-card border border-border rounded-lg p-4 md:p-6">
+        <p class="text-xs md:text-sm text-muted-foreground mb-2">Total Expenses</p>
+        <p class="text-2xl md:text-3xl font-bold text-red-600">Ksh {{ total_expenses|floatformat:2 }}</p>
+    </div>
+
+    <div class="bg-card border border-border rounded-lg p-4 md:p-6">
+        <p class="text-xs md:text-sm text-muted-foreground mb-2">Net Profit</p>
+        <p class="text-2xl md:text-3xl font-bold {% if net_profit >= 0 %}text-green-600{% else %}text-red-600{% endif %}">Ksh {{ net_profit|floatformat:2 }}</p>
+    </div>
+</div>
+
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6 mb-6">
+    <!-- Monthly Breakdown Chart -->
+    <div class="bg-card border border-border rounded-lg p-4 md:p-6">
+        <h3 class="text-base md:text-lg font-semibold mb-4">Monthly Breakdown</h3>
+        <div class="relative h-48 md:h-64">
+            <canvas id="monthlyChart"></canvas>
+        </div>
+    </div>
+
+    <!-- Net Profit Trend -->
+    <div class="bg-card border border-border rounded-lg p-4 md:p-6">
+        <h3 class="text-base md:text-lg font-semibold mb-4">Net Profit Trend</h3>
+        <div class="relative h-48 md:h-64">
+            <canvas id="netProfitChart"></canvas>
+        </div>
+    </div>
+</div>
+
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6">
+    <!-- Expenses by Category (Doughnut) -->
+    <div class="bg-card border border-border rounded-lg p-4 md:p-6">
+        <h3 class="text-base md:text-lg font-semibold mb-4">Spending by Category</h3>
+        <div class="relative h-48 md:h-64">
+            <canvas id="expensesCategoryChart"></canvas>
+        </div>
+    </div>
+
+    <!-- Top 5 Income Sources (Bar Chart) -->
+    <div class="bg-card border border-border rounded-lg p-4 md:p-6">
+        <h3 class="text-base md:text-lg font-semibold mb-4">Top 5 Income Sources</h3>
+        <div class="relative h-48 md:h-64">
+            <canvas id="topIncomeChart"></canvas>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+
+    // Monthly Breakdown
+    new Chart(document.getElementById('monthlyChart').getContext('2d'), {
+        type: 'bar',
+        data: {
+            labels: [{% for item in monthly_data %}'{{ item.month }}'{% if not forloop.last %},{% endif %}{% endfor %}],
+            datasets: [
+                {
+                    label: 'Income',
+                    data: [{% for item in monthly_data %}{{ item.income }}{% if not forloop.last %},{% endif %}{% endfor %}],
+                    backgroundColor: 'hsl(160 84% 39%)',
+                },
+                {
+                    label: 'Expenses',
+                    data: [{% for item in monthly_data %}{{ item.expenses }}{% if not forloop.last %},{% endif %}{% endfor %}],
+                    backgroundColor: 'hsl(0 72% 60%)',
+                }
+            ]
+        },
+        options: { 
+            responsive: true, 
+            maintainAspectRatio: false,
+            scales: {
+                y: {
+                    beginAtZero: true,
+                } 
+        }}
+    });
+
+    // Net Profit Trend
+    new Chart(document.getElementById('netProfitChart').getContext('2d'), {
+        type: 'line',
+        data: {
+            labels: [{% for item in monthly_data %}'{{ item.month }}'{% if not forloop.last %},{% endif %}{% endfor %}],
+            datasets: [{
+                label: 'Net Profit',
+                data: [{% for item in monthly_data %}{{ item.net_profit }}{% if not forloop.last %},{% endif %}{% endfor %}],
+                borderColor: 'hsl(160 84% 39%)',
+                backgroundColor: 'hsl(160 84% 39% / 0.1)',
+                fill: true,
+                tension: 0.4
+            }]
+        },
+        options: { 
+            responsive: true, 
+            maintainAspectRatio: false,
+            scales: {
+                y: {
+                    beginAtZero: true,
+                } 
+            }
+    }});
+
+    // Expenses by Category (Doughnut)
+    new Chart(document.getElementById('expensesCategoryChart').getContext('2d'), {
+        type: 'doughnut',
+        data: {
+            labels: [{% for category in expense_categories %}'{{ category.name }}'{% if not forloop.last %},{% endif %}{% endfor %}],
+            datasets: [{
+                data: [{% for category in expense_categories %}{{ category.amount }}{% if not forloop.last %},{% endif %}{% endfor %}],
+                backgroundColor: [
+                    'hsl(0 72% 60%)', 'hsl(30 70% 60%)', 'hsl(60 70% 60%)',
+                    'hsl(120 70% 50%)', 'hsl(200 70% 50%)', 'hsl(280 70% 50%)'
+                ]
+            }]
+        },
+        options: { responsive: true, maintainAspectRatio: false }
+    });
+
+    // Top 5 Income Sources (Bar)
+    new Chart(document.getElementById('topIncomeChart').getContext('2d'), {
+        type: 'bar',
+        data: {
+            labels: [{% for source in top_income_sources %}'{{ source.name }}'{% if not forloop.last %},{% endif %}{% endfor %}],
+            datasets: [{
+                label: 'Income',
+                data: [{% for source in top_income_sources %}{{ source.amount }}{% if not forloop.last %},{% endif %}{% endfor %}],
+                backgroundColor: 'hsl(160 84% 39%)'
+            }]
+        },
+        options: { responsive: true, maintainAspectRatio: false }
+    });
+
+});
+</script>
+{% endblock %}
