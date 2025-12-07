@@ -1,6 +1,6 @@
 FinFlow is a modern financial management application that helps users track income, expenses, and monitor financial performance through an intuitive and responsive interface.
 
-🚀 Features
+**🚀 Features**
 
 💰 Income & expense tracking
 
@@ -18,7 +18,7 @@ FinFlow is a modern financial management application that helps users track inco
 
 📱 Fully responsive interface
 
-🛠️ Tech Stack
+**🛠️ Tech Stack**
 Component	Technology
 Backend	Django 5.x
 Frontend	Django Templates + Tailwind CSS
@@ -27,7 +27,7 @@ Runtime	Python 3.11+
 Build Tools	Node.js + npm
 
 
-⚡ Quick Start
+**⚡ Quick Start**
 Prerequisites:
     Python 3.11+
     Node.js 18+
@@ -51,19 +51,16 @@ python manage.py migrate
 5. Start development servers
 
 Django:
-
 python manage.py runserver
 
 
 Tailwind (watch mode):
-
 npm run tailwind:watch
 
 
 Open http://localhost:8000
-.
 
-📂 Project Structure (Simplified)
+**📂 Project Structure**
 finflow/
 ├── config/            # Project settings & URLs
 ├── finflow/           # Core app (models, views, URLs)
@@ -74,33 +71,6 @@ finflow/
 ├── requirements.txt   # Python dependencies
 └── tailwind.config.js # Tailwind setup
 
-📘 Documentation
-
-Detailed documentation available in the repository:
-
-ARCHITECTURE.md — System design overview
-
-API_VIEWS.md — Internal views/logic reference
-
-DEVELOPER_GUIDE.md — Development workflow
-
-DEPLOYMENT.md — Deployment & production setup
-
-CODE_STYLE.md — Coding standards
-
-
-🔒 Security Notes
-
-Do not commit sensitive information such as:
-
-.env files
-
-Secret keys
-
-Database passwords
-
-API tokens
-
 Production configuration should rely on environment variables.
 
 🧪 Development Commands
@@ -110,7 +80,7 @@ python manage.py test
 python manage.py collectstatic
 npm run tailwind:build
 
-📦 Deployment
+**📦 Deployment**
 
 FinFlow supports various deployment environments including:
 
@@ -122,7 +92,7 @@ Containerized deployments
 
 See DEPLOYMENT.md for full details.
 
-🤝 Contributing
+**🤝 Contributing**
 
 Contributions are welcome!
 
@@ -134,12 +104,6 @@ Commit changes with descriptive messages
 
 Submit a pull request
 
-📄 License
+**👥 Author**
 
-This project is licensed under the MIT License.
-See the LICENSE
- file for details.
-
-👥 Author
-
-FinFlow Team
+Macharia Simon
