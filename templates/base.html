@@ -35,9 +35,13 @@
 
             <div class="absolute bottom-0 border-border user-info mt-6 border-t pt-4 mb-3">
                 <div class="flex items-center gap-3 mb-3">
-                    <div class="w-10 h-10 rounded-full bg-accent text-white flex items-center justify-center font-bold">
+                    <div class="w-10 h-10 rounded-full overflow-hidden bg-accent text-white flex items-center justify-center font-bold">
+                    {% if user.profile.business_logo %}
+                        <img src="{{ user.profile.business_logo.url }}" class="w-full h-full object-cover">
+                    {% else %}
                         {{ user.username|first|upper }}
-                    </div>
+                    {% endif %}
+                </div>
                     <div>
                         <p class="text-sm font-medium">{{ user.get_full_name|default:user.username }}</p>
                         <p class="text-xs text-muted-foreground">{{ user.email }}</p>
@@ -64,7 +68,7 @@
                 
                 <div class="more-info">
                     <p class="text-2xl font-bold text-accent bg-inherit leading-none whitespace-normal shrink-0">
-                        FinFlow
+                        {{ profile.business_name|default:"FinFlow" }}
                     </p>
                 </div>
             </div>
@@ -84,8 +88,12 @@
 
         <div class="p-4 border-t border-border user-info">
             <div class="flex items-center gap-3 mb-3">
-                <div class="w-10 h-10 rounded-full bg-accent text-white flex items-center justify-center font-bold">
-                    {{ user.username|first|upper }}
+                <div class="w-10 h-10 rounded-full overflow-hidden bg-accent text-white flex items-center justify-center font-bold">
+                    {% if user.profile.business_logo %}
+                        <img src="{{ user.profile.business_logo.url }}" class="w-full h-full object-cover">
+                    {% else %}
+                        {{ user.username|first|upper }}
+                    {% endif %}
                 </div>
                 <div>
                     <p class="text-sm font-medium">{{ user.get_full_name|default:user.username }}</p>
@@ -108,7 +116,7 @@
             <div class="flex items-center justify-between w-full px-2">
                 <div>
                     <a href="{% url 'finflow:dashboard'%}">
-                        <h1 class="text-xl font-bold text-accent mb-1">FinFlow</h1>
+                        <h1 class="text-xl font-bold text-accent mb-1">{{ profile.business_name|default:"FinFlow" }}</h1>
                         <p class="text-s text-muted-foreground ">Financial Management Assistant</p>
                     </a>
                 </div>
@@ -171,7 +179,7 @@
 
         <footer>
         <div class="text-center text-xs text-muted-foreground p-2 border-t border-border">
-            &copy; {{ current_year }} FinFlow. All rights reserved.
+            &copy; {% now "Y" %} FinFlow. All rights reserved.
         </div>
     </footer>
     </div>

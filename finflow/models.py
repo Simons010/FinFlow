@@ -2,6 +2,8 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.core.validators import MinValueValidator
 from datetime import date
+from django.dispatch import receiver
+from django.db.models.signals import post_save
 
 class Category(models.Model):
     """Transaction category model"""
@@ -57,3 +59,19 @@ class Transaction(models.Model):
     def __str__(self):
         return f"{self.description} - {self.amount} ({self.get_transaction_type_display()})"
 
+class Profile(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='profile')
+    
+    business_name = models.CharField(max_length=20, blank=True)
+    business_logo = models.ImageField(upload_to='media/logos/', blank=True, null=True)
+    # current_year = models.DateField()
+    
+    def __str__(self):
+        return f"{self.user.username}'s Profile"
+    
+@receiver(post_save, sender=User)
+def create_or_update_user_profile(sender, instance, created, **kwargs):
+    if created:
+        Profile.objects.create(user=instance)
+    else:
+        instance.profile.save()

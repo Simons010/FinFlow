@@ -6,7 +6,7 @@ from django.contrib import messages
 from django.db import models
 from datetime import datetime, timedelta
 from decimal import Decimal
-from .models import Transaction, Category
+from .models import Transaction, Category, Profile
 
 @login_required
 def dashboard(request):
@@ -193,18 +193,35 @@ def reports(request):
 @login_required
 def settings(request):
     """Settings view"""
+    user = request.user
+    profile = user.profile
+    
+    # Ensure profile exists
+    profile, created = Profile.objects.get_or_create(user=user)
+    
     if request.method == 'POST':
-        # Handle settings update here
-        user = request.user
+        # Handle settings update
+        
         user.first_name = request.POST.get('first_name', '')
         user.last_name = request.POST.get('last_name', '')
         user.email = request.POST.get('email', '')
+        
         user.save()
+        
+        profile.business_name = request.POST.get('business_name', '')
+        profile.current_year = datetime.now().year
+        
+        if 'business_logo' in request.FILES:
+            profile.business_logo = request.FILES['business_logo']
+            
+        profile.save()
+            
         messages.success(request, 'Settings updated successfully.')
-        return redirect('finflow:settings')
+        return redirect('finflow:settings') 
     
     context = {
-        'user': request.user,
+        'user': user,
+        'profile': profile,
     }
     
     return render(request, 'finflow/settings.html', context)
