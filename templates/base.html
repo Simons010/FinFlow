@@ -27,7 +27,7 @@
             </div>
 
             <nav class="space-y-2">
-                <a href="{% url 'finflow:dashboard' %}" class="block px-4 py-2 rounded hover:bg-muted {% if request.resolver_match.url_name == 'dashboard' %}bg-accent text-accent-foreground{% endif %}">📊 Dashboard</a>
+                <a href="{% url 'finflow:dashboard' %}" class="block px-4 py-2 rounded hover:bg-muted {% if request.resolver_match.url_name == 'dashboard' %}bg-accent text-accent-foreground {% endif %}">📊 Dashboard</a>
                 <a href="{% url 'finflow:transactions' %}" class="block px-4 py-2 rounded hover:bg-muted {% if request.resolver_match.url_name == 'transactions' %}bg-accent text-accent-foreground{% endif %}">💳 Transactions</a>
                 <a href="{% url 'finflow:categories' %}" class="block px-4 py-2 rounded hover:bg-muted {% if request.resolver_match.url_name == 'categories' %}bg-accent text-accent-foreground{% endif %}">📁 Categories</a>
                 <a href="{% url 'finflow:reports' %}" class="block px-4 py-2 rounded hover:bg-muted {% if request.resolver_match.url_name == 'reports' %}bg-accent text-accent-foreground{% endif %}">📈 Reports</a>
@@ -102,9 +102,12 @@
                 </div>
             </div>
 
-            <form method="POST" action="{% url 'logout' %}">
+            <form method="POST" action="{% url 'logout' %}" >
                 {% csrf_token %}
-                <button class="w-full px-4 py-2 rounded bg-destructive text-white">Logout</button>
+                <div class="w-10 px-2 py-2 rounded bg-destructive text-white gap-2 flex items-center justify-center">
+                    <i class="fa-solid fa-arrow-right-from-bracket"></i>
+                    <button >Logout</button>
+                </div>
             </form>
         </div>
     </aside>

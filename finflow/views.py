@@ -115,82 +115,173 @@ def categories(request):
     
     return render(request, 'finflow/categories.html', context)
 
-
 @login_required
 def reports(request):
-    """Financial reports view"""
     user = request.user
     transactions = Transaction.objects.filter(user=user)
-    
-    # P&L Statement
+
+    # -----------------------------
+    # TOTAL INCOME & EXPENSES
+    # -----------------------------
     total_income = transactions.filter(transaction_type='income').aggregate(
-        total=models.Sum('amount'))['total'] or Decimal('0')
+        total=models.Sum('amount')
+    )['total'] or Decimal('0')
+
     total_expenses = transactions.filter(transaction_type='expense').aggregate(
-        total=models.Sum('amount'))['total'] or Decimal('0')
+        total=models.Sum('amount')
+    )['total'] or Decimal('0')
+
     net_profit = total_income - total_expenses
-    
-    # Monthly breakdown (last 6 months)
+
+    # -----------------------------
+    # LAST MONTH VS THIS MONTH COMPARISONS
+    # -----------------------------
     today = datetime.today()
-    monthly_data = []
-    for i in range(6):
-        month_start = today.replace(day=1) - timedelta(days=30*i)
-        month_start = month_start.replace(day=1)
-        if i == 0:
-            month_end = today
-        else:
-            month_end = month_start + timedelta(days=32)
-            month_end = month_end.replace(day=1) - timedelta(days=1)
-        
-        month_income = transactions.filter(
-            transaction_type='income',
-            date__range=[month_start, month_end]
-        ).aggregate(total=models.Sum('amount'))['total'] or Decimal('0')
-        
-        month_expenses = transactions.filter(
-            transaction_type='expense',
-            date__range=[month_start, month_end]
-        ).aggregate(total=models.Sum('amount'))['total'] or Decimal('0')
-        
-        monthly_data.append({
-            'month': month_start.strftime('%b %Y'),
-            'income': float(month_income),
-            'expenses': float(month_expenses),
-            'net_profit': float(month_income - month_expenses),
-        })
-    
-    monthly_data.reverse()
-    
-    # Expense categories (for doughnut chart)
-    expenses_by_category = []
-    for category in Category.objects.filter(user=user, category_type='expense'):
-        total = transactions.filter(category=category).aggregate(
-            total=models.Sum('amount'))['total'] or Decimal('0')
-        expenses_by_category.append({
-            'name': category.name,
-            'amount': float(total),
-        })
-    
-    # Top 5 income sources (bar chart)
+    first_day_this_month = today.replace(day=1)
+    last_month_end = first_day_this_month - timedelta(days=1)
+    last_month_start = last_month_end.replace(day=1)
+
+    # This month totals
+    income_this_month = transactions.filter(
+        transaction_type='income',
+        date__gte=first_day_this_month
+    ).aggregate(total=models.Sum('amount'))['total'] or Decimal('0')
+
+    expenses_this_month = transactions.filter(
+        transaction_type='expense',
+        date__gte=first_day_this_month
+    ).aggregate(total=models.Sum('amount'))['total'] or Decimal('0')
+
+    profit_this_month = income_this_month - expenses_this_month
+
+    # Last month totals
+    income_last_month = transactions.filter(
+        transaction_type='income',
+        date__range=[last_month_start, last_month_end]
+    ).aggregate(total=models.Sum('amount'))['total'] or Decimal('0')
+
+    expenses_last_month = transactions.filter(
+        transaction_type='expense',
+        date__range=[last_month_start, last_month_end]
+    ).aggregate(total=models.Sum('amount'))['total'] or Decimal('0')
+
+    profit_last_month = income_last_month - expenses_last_month
+
+    # Percentage change helpers
+    def percent_change(current, previous):
+        if previous == 0:
+            return 100 if current > 0 else 0
+        return round(((current - previous) / previous) * 100, 2)
+
+    income_change_percent = percent_change(income_this_month, income_last_month)
+    expense_change_percent = percent_change(expenses_this_month, expenses_last_month)
+    net_profit_change = percent_change(profit_this_month, profit_last_month)
+
+    # Profit margin
+    profit_margin = (
+        round((float(net_profit) / float(total_income)) * 100, 2)
+        if total_income > 0 else 0
+    )
+
+    # -----------------------------
+    # TOP INCOME + EXPENSE CATEGORIES
+    # -----------------------------
     income_categories = []
-    for category in Category.objects.filter(user=user, category_type='income'):
-        total = transactions.filter(category=category).aggregate(
-            total=models.Sum('amount'))['total'] or Decimal('0')
-        income_categories.append({
-            'name': category.name,
-            'amount': float(total),
+    for cat in Category.objects.filter(user=user, category_type='income'):
+        amount = transactions.filter(category=cat).aggregate(
+            total=models.Sum('amount')
+        )['total'] or Decimal('0')
+
+        income_categories.append({"name": cat.name, "amount": float(amount)})
+
+    top_income_category = (
+        max(income_categories, key=lambda x: x["amount"])["name"]
+        if income_categories else "None"
+    )
+
+    expense_categories_data = []
+    for cat in Category.objects.filter(user=user, category_type='expense'):
+        amount = transactions.filter(category=cat).aggregate(
+            total=models.Sum('amount')
+        )['total'] or Decimal('0')
+
+        expense_categories_data.append({"name": cat.name, "amount": float(amount)})
+
+    top_expense_category = (
+        max(expense_categories_data, key=lambda x: x["amount"])["name"]
+        if expense_categories_data else "None"
+    )
+
+    # -----------------------------
+    # TRANSACTION COUNTS
+    # -----------------------------
+    income_transactions = transactions.filter(transaction_type='income').count()
+    expense_transactions = transactions.filter(transaction_type='expense').count()
+
+    # -----------------------------
+    # CHART LOGIC (UNTOUCHED)
+    # -----------------------------
+    monthly_data = []
+    today = datetime.today().replace(day=1)
+
+    for i in range(6):
+        month_start = (today - timedelta(days=30 * i)).replace(day=1)
+        next_month = (month_start + timedelta(days=32)).replace(day=1)
+        month_end = next_month - timedelta(days=1)
+
+        m_income = transactions.filter(
+            transaction_type="income",
+            date__range=[month_start, month_end]
+        ).aggregate(total=models.Sum('amount'))['total'] or Decimal('0')
+
+        m_expenses = transactions.filter(
+            transaction_type="expense",
+            date__range=[month_start, month_end]
+        ).aggregate(total=models.Sum('amount'))['total'] or Decimal('0')
+
+        monthly_data.append({
+            "month": month_start.strftime("%b %Y"),
+            "income": float(m_income),
+            "expenses": float(m_expenses),
+            "net_profit": float(m_income - m_expenses),
         })
+
+    monthly_data.reverse()
+
+    # Expense categories for doughnut
+    expense_categories = expense_categories_data
+
+    # Top income sources (bar chart)
     top_income_sources = sorted(income_categories, key=lambda x: x['amount'], reverse=True)[:5]
-    
+
+    # -----------------------------
+    # CONTEXT
+    # -----------------------------
     context = {
-        'total_income': float(total_income),
-        'total_expenses': float(total_expenses),
-        'net_profit': float(net_profit),
-        'monthly_data': monthly_data,
-        'expense_categories': expenses_by_category,
-        'top_income_sources': top_income_sources,
+        # Cards
+        "total_income": float(total_income),
+        "total_expenses": float(total_expenses),
+        "net_profit": float(net_profit),
+
+        "income_change_percent": income_change_percent,
+        "expense_change_percent": expense_change_percent,
+        "net_profit_change": net_profit_change,
+        "profit_margin": profit_margin,
+
+        "top_income_category": top_income_category,
+        "top_expense_category": top_expense_category,
+
+        "income_transactions": income_transactions,
+        "expense_transactions": expense_transactions,
+
+        # Charts
+        "monthly_data": monthly_data,
+        "expense_categories": expense_categories,
+        "top_income_sources": top_income_sources,
     }
-    
-    return render(request, 'finflow/reports.html', context)
+
+    return render(request, "finflow/reports.html", context)
+
 
 
 
