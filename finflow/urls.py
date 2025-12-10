@@ -13,4 +13,8 @@ urlpatterns = [
     path('categories/delete/<int:pk>/', views.delete_category, name='delete_category'),
     path('reports/', views.reports, name='reports'),
     path('settings/', views.settings, name='settings'),
+    path('reports/export/csv/', views.export_report_csv, name='export_report_csv'),
+    path('reports/export/excel/', views.export_report_excel, name='export_report_excel'),
+    path('reports/export/pdf/', views.export_report_pdf, name='export_report_pdf'),
+
 ]

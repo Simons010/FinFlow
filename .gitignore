@@ -12,7 +12,7 @@ media/
 *.log
 
 # ---- Virtual environment ----
-venv/
+myenv/
 .env
 *.env
 

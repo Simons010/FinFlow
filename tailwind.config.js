@@ -2,8 +2,10 @@
 export default {
   darkMode: ["class"],
   content: [
-    "./templates/**/*.html",
-    "./static/js/**/*.js"
+    "./templates/**/*.{html,js}",
+    "./**/templates/**/*.{html,js}",
+    "./static/**/*.{js,jsx,ts,tsx}",
+    "./**/static/**/*.{js,jsx,ts,tsx}",
   ],
   safelist: [
     // Colors from variables

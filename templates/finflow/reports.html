@@ -1,11 +1,19 @@
 {% extends 'base.html' %}
 {% load static %}
-
+ 
 {% block title %}Reports - FinFlow{% endblock %}
 {% block page_title %}Reports{% endblock %}
 
 {% block content %}
 <!-- P&L Statement -->
+<div class="mb-4 md:mb-6 flex justify-between items-center">
+    <h2 class="text-xl md:text-xl font-bold">Profit & Loss Statement</h2>
+    <div class="inline-flex gap-2 items-center px-3 py-2 md:px-4 md:py-2 bg-accent text-white rounded-lg hover:bg-muted hover:shadow-lg transition-all duration-200 text-sm md:text-base">
+        <button type="submit" onclick="openExportModal()">Export Report </button>
+        <i class="fa-solid fa-download"></i>
+    </div>
+</div>
+
 <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 md:gap-6 mb-6 md:mb-8">
     <div class="bg-card border border-border rounded-lg p-4 md:p-6">
         <p class="text-xs md:text-sm text-muted-foreground mb-2">Total Income</p>
@@ -58,6 +66,37 @@
         </div>
     </div>
 </div>
+
+<!-- Export Modal -->
+<div id="exportModal" class="hidden fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+    <div class="bg-white dark:bg-gray-900 p-6 rounded-xl w-120 shadow-xl px-4 py-4">
+        <h2 class="text-lg font-semibold mb-4">Export Report</h2>
+        <p class="text-sm text-gray-600 dark:text-gray-400 mb-4">Choose export format:</p>
+
+        <div class="flex flex-col gap-2 mb-2">
+            <a href="{% url 'finflow:export_report_csv' %}"
+               class="bg-blue-600 text-white py-2 rounded-lg text-center hover:bg-muted">
+                Export as CSV
+            </a>
+
+            <a href="{% url 'finflow:export_report_excel' %}"
+               class="bg-green-600 text-white py-2 rounded-lg text-center hover:bg-muted">
+                Export as Excel
+            </a>
+
+            <a href="{% url 'finflow:export_report_pdf' %}"
+               class="bg-red-600 text-white py-2 rounded-lg text-center hover:bg-muted">
+                Export as PDF
+            </a>
+        </div>
+
+        <button onclick="closeExportModal()"
+                class="mt-4 w-full py-2 bg-gray-300 dark:bg-gray-700 rounded-lg hover:bg-gray-400 dark:hover:bg-gray-600 border border-border">
+            Cancel
+        </button>
+    </div>
+</div>
+
 {% endblock %}
 
 {% block extra_js %}
@@ -147,5 +186,15 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
 });
+
+// export modal functions
+function openExportModal() {
+    document.getElementById("exportModal").classList.remove("hidden");
+}
+
+function closeExportModal() {
+    document.getElementById("exportModal").classList.add("hidden");
+}
+
 </script>
 {% endblock %}

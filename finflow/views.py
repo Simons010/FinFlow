@@ -1,12 +1,16 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_http_methods
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponse
 from django.contrib import messages
 from django.db import models
 from datetime import datetime, timedelta
 from decimal import Decimal
 from .models import Transaction, Category, Profile
+import csv
+from openpyxl import Workbook
+from reportlab.pdfgen import canvas
+from reportlab.lib.pagesizes import letter
 
 @login_required
 def dashboard(request):
@@ -225,6 +229,118 @@ def settings(request):
     }
     
     return render(request, 'finflow/settings.html', context)
+
+#export csv view
+def export_report_csv(request):
+    # Calculate totals
+    total_income = Transaction.objects.filter(
+        user=request.user,
+        transaction_type='income'
+    ).aggregate(total=models.Sum('amount'))['total'] or 0
+
+    total_expenses = Transaction.objects.filter(
+        user=request.user,
+        transaction_type='expense'
+    ).aggregate(total=models.Sum('amount'))['total'] or 0
+
+    net_profit = total_income - total_expenses
+
+    # Create CSV response
+    response = HttpResponse(content_type='text/csv')
+    response['Content-Disposition'] = (
+        f'attachment; filename="finflow_report_{datetime.now().strftime("%Y%m%d")}.csv"'
+    )
+    
+    writer = csv.writer(response)
+
+    # Header
+    writer.writerow(['FinFlow - Financial Report'])
+    writer.writerow([f'Generated: {datetime.now().strftime("%Y-%m-%d %H:%M")}'])
+    writer.writerow([])
+    
+    # P&L Summary
+    writer.writerow(['Profit & Loss Statement'])
+    writer.writerow(['Total Income', f'Ksh {total_income}'])
+    writer.writerow(['Total Expenses', f'Ksh {total_expenses}'])
+    writer.writerow(['Net Profit', f'Ksh {net_profit}'])
+    writer.writerow([])
+    
+    # All Transactions
+    writer.writerow(['All Transactions'])
+    writer.writerow(['Date', 'Description', 'Category', 'Type', 'Amount'])
+    
+    transactions = Transaction.objects.filter(user=request.user).order_by('-date')
+    
+    for t in transactions:
+        writer.writerow([
+            t.date,
+            t.description,
+            t.category.name if t.category else '',
+            t.transaction_type.title(),
+            f'Ksh {t.amount}'
+        ])
+    
+    return response
+
+#export excel view
+def export_report_excel(request):
+    wb = Workbook()
+    ws = wb.active
+    ws.title = "FinFlow Report"
+
+    # Create data
+    transactions = Transaction.objects.filter(user=request.user)
+
+    ws.append(["Date", "Description", "Category", "Type", "Amount"])
+
+    for t in transactions:
+        ws.append([
+            t.date,
+            t.description,
+            t.category.name if t.category else "",
+            t.transaction_type.title(),
+            t.amount
+        ])
+
+    # Prepare response
+    response = HttpResponse(
+        content_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+    )
+    response["Content-Disposition"] = (
+        f'attachment; filename="finflow_report_{datetime.now().strftime("%Y%m%d")}.xlsx"'
+    )
+
+    wb.save(response)
+    return response
+
+#export pdf view
+def export_report_pdf(request):
+    response = HttpResponse(content_type='application/pdf')
+    response['Content-Disposition'] = f'attachment; filename="finflow_report_{datetime.now().strftime("%Y%m%d")}.pdf"'
+
+    p = canvas.Canvas(response, pagesize=letter)
+    width, height = letter
+
+    y = height - 50
+    p.setFont("Helvetica-Bold", 16)
+    p.drawString(50, y, "FinFlow - Financial Report")
+
+    y -= 40
+    p.setFont("Helvetica", 12)
+
+    transactions = Transaction.objects.filter(user=request.user)
+
+    for t in transactions:
+        p.drawString(50, y, f"{t.date} - {t.description} - {t.category} - {t.transaction_type} - Ksh {t.amount}")
+        y -= 18
+
+        if y < 50:
+            p.showPage()
+            p.setFont("Helvetica", 12)
+            y = height - 50
+
+    p.save()
+    return response
 
 
 # API endpoints for AJAX requests
