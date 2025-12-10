@@ -34,7 +34,7 @@
                 <a href="{% url 'finflow:settings' %}" class="block px-4 py-2 rounded hover:bg-muted {% if request.resolver_match.url_name == 'settings' %}bg-accent text-accent-foreground{% endif %}">⚙️ Settings</a>
             </nav>
 
-            <div class="absolute bottom-0 border-border user-info mt-6 border-t pt-4 mb-3">
+            <div class="absolute bottom-0 border-border user-info mt-6 border-t pt-4 mb-3 w-fit">
                 <div class="flex items-center gap-3 mb-3">
                     <div class="w-10 h-10 rounded-full overflow-hidden bg-accent text-white flex items-center justify-center font-bold">
                     {% if user.profile.business_logo %}
@@ -51,7 +51,10 @@
 
                 <form method="POST" action="{% url 'logout' %}">
                     {% csrf_token %}
-                    <button class="w-full px-4 py-2 rounded-lg bg-destructive text-white">Logout</button>
+                    <div class="py-3 w-full h-auto rounded-xl bg-destructive text-white gap-4 flex items-center justify-center">
+                        <i class="fa-solid fa-arrow-right-from-bracket"></i>
+                        <button >Logout</button>
+                    </div>
                 </form>
             </div>
         </div>
@@ -104,7 +107,7 @@
 
             <form method="POST" action="{% url 'logout' %}" >
                 {% csrf_token %}
-                <div class="w-10 px-2 py-2 rounded bg-destructive text-white gap-2 flex items-center justify-center">
+                <div class="py-3 w-12 h-auto rounded-xl bg-destructive text-white gap-4 flex items-center justify-center">
                     <i class="fa-solid fa-arrow-right-from-bracket"></i>
                     <button >Logout</button>
                 </div>
