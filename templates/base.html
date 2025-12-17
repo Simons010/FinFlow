@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}FinFlow - Financial Management{% endblock %}</title>
+    <link rel="icon" href="{% static 'images/favicon.ico' %}" type="image/x-icon">
 
     <link rel="stylesheet" href="{% static 'css/output.css' %}">
     <link rel="stylesheet" href="{% static 'css/custom.css' %}">
@@ -123,7 +124,7 @@
             <div class="flex items-center justify-between w-full px-2">
                 <div>
                     <a href="{% url 'finflow:dashboard'%}">
-                        <h1 class="text-xl font-bold text-custom-accent mb-1">{{ profile.business_name|default:"FinFlow" }}</h1>
+                        <h1 class="text-xl font-bold text-blue-800 mb-1">{{ profile.business_name|default:"FinFlow" }}</h1>
                         <p class="text-s text-custom-muted-foreground ">Financial Management Assistant</p>
                     </a>
                 </div>
