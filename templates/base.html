@@ -27,11 +27,11 @@
             </div>
 
             <nav class="space-y-2">
-                <a href="{% url 'finflow:dashboard' %}" class="block px-4 py-2 rounded hover:bg-custom-muted {% if request.resolver_match.url_name == 'dashboard' %}bg-purple-900 text-custom-accent-foreground {% endif %}">📊 Dashboard</a>
-                <a href="{% url 'finflow:transactions' %}" class="block px-4 py-2 rounded hover:bg-custom-muted {% if request.resolver_match.url_name == 'transactions' %}bg-custom-accent text-custom-accent-foreground{% endif %}">💳 Transactions</a>
-                <a href="{% url 'finflow:categories' %}" class="block px-4 py-2 rounded hover:bg-custom-muted {% if request.resolver_match.url_name == 'categories' %}bg-custom-accent text-custom-accent-foreground{% endif %}">📁 Categories</a>
-                <a href="{% url 'finflow:reports' %}" class="block px-4 py-2 rounded hover:bg-custom-muted {% if request.resolver_match.url_name == 'reports' %}bg-custom-accent text-custom-accent-foreground{% endif %}">📈 Reports</a>
-                <a href="{% url 'finflow:settings' %}" class="block px-4 py-2 rounded hover:bg-custom-muted {% if request.resolver_match.url_name == 'settings' %}bg-custom-accent text-custom-accent-foreground{% endif %}">⚙️ Settings</a>
+                <a href="{% url 'finflow:dashboard' %}" class="block px-4 py-2 rounded hover:bg-custom-muted {% if request.resolver_match.url_name == 'dashboard' %}bg-blue-800 text-custom-accent-foreground {% endif %}">📊 Dashboard</a>
+                <a href="{% url 'finflow:transactions' %}" class="block px-4 py-2 rounded hover:bg-custom-muted {% if request.resolver_match.url_name == 'transactions' %}bg-blue-800 text-custom-accent-foreground{% endif %}">💳 Transactions</a>
+                <a href="{% url 'finflow:categories' %}" class="block px-4 py-2 rounded hover:bg-custom-muted {% if request.resolver_match.url_name == 'categories' %}bg-blue-800 text-custom-accent-foreground{% endif %}">📁 Categories</a>
+                <a href="{% url 'finflow:reports' %}" class="block px-4 py-2 rounded hover:bg-custom-muted {% if request.resolver_match.url_name == 'reports' %}bg-blue-800 text-custom-accent-foreground{% endif %}">📈 Reports</a>
+                <a href="{% url 'finflow:settings' %}" class="block px-4 py-2 rounded hover:bg-custom-muted {% if request.resolver_match.url_name == 'settings' %}bg-blue-800 text-custom-accent-foreground{% endif %}">⚙️ Settings</a>
             </nav>
 
             <div class="absolute bottom-0 border-custom-border user-info mt-6 border-t pt-4 mb-3 w-fit">
@@ -83,11 +83,11 @@
 
 
         <nav class="space-y-2 px-4 flex-1">
-            <a href="{% url 'finflow:dashboard' %}" class="flex items-center gap-3 px-3 py-2 rounded-lg transition-colors hover:bg-custom-muted {% if request.resolver_match.url_name == 'dashboard' %}bg-custom-accent text-custom-accent-foreground{% endif %}">📊 <span class="nav-label">Dashboard</span></a>
-            <a href="{% url 'finflow:transactions' %}" class="flex items-center gap-3 px-3 py-2 rounded-lg transition-colors hover:bg-custom-muted {% if request.resolver_match.url_name == 'transactions' %}bg-custom-accent text-custom-accent-foreground{% endif %}">💳 <span class="nav-label">Transactions</span></a>
-            <a href="{% url 'finflow:categories' %}" class="flex items-center gap-3 px-3 py-2 rounded-lg transition-colors hover:bg-custom-muted {% if request.resolver_match.url_name == 'categories' %}bg-custom-accent text-custom-accent-foreground{% endif %}">📁 <span class="nav-label">Categories</span></a>
-            <a href="{% url 'finflow:reports' %}" class="flex items-center gap-3 px-3 py-2 rounded-lg transition-colors hover:bg-custom-muted {% if request.resolver_match.url_name == 'reports' %}bg-custom-accent text-custom-accent-foreground{% endif %}">📈 <span class="nav-label">Reports</span></a>
-            <a href="{% url 'finflow:settings' %}" class="flex items-center gap-3 px-3 py-2 rounded-lg transition-colors hover:bg-custom-muted {% if request.resolver_match.url_name == 'settings' %}bg-custom-accent text-custom-accent-foreground{% endif %}">⚙️ <span class="nav-label">Settings</span></a>
+            <a href="{% url 'finflow:dashboard' %}" class="flex items-center gap-3 px-3 py-2 rounded-lg transition-colors hover:bg-custom-muted {% if request.resolver_match.url_name == 'dashboard' %}bg-blue-800 text-custom-accent-foreground{% endif %}">📊 <span class="nav-label">Dashboard</span></a>
+            <a href="{% url 'finflow:transactions' %}" class="flex items-center gap-3 px-3 py-2 rounded-lg transition-colors hover:bg-custom-muted {% if request.resolver_match.url_name == 'transactions' %}bg-blue-800 text-custom-accent-foreground{% endif %}">💳 <span class="nav-label">Transactions</span></a>
+            <a href="{% url 'finflow:categories' %}" class="flex items-center gap-3 px-3 py-2 rounded-lg transition-colors hover:bg-custom-muted {% if request.resolver_match.url_name == 'categories' %}bg-blue-800 text-custom-accent-foreground{% endif %}">📁 <span class="nav-label">Categories</span></a>
+            <a href="{% url 'finflow:reports' %}" class="flex items-center gap-3 px-3 py-2 rounded-lg transition-colors hover:bg-custom-muted {% if request.resolver_match.url_name == 'reports' %}bg-blue-800 text-custom-accent-foreground{% endif %}">📈 <span class="nav-label">Reports</span></a>
+            <a href="{% url 'finflow:settings' %}" class="flex items-center gap-3 px-3 py-2 rounded-lg transition-colors hover:bg-custom-muted {% if request.resolver_match.url_name == 'settings' %}bg-blue-800 text-custom-accent-foreground{% endif %}">⚙️ <span class="nav-label">Settings</span></a>
         </nav>
 
         <div class="p-4 border-t border-custom-border user-info">

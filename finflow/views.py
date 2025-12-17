@@ -11,7 +11,6 @@ import csv
 from openpyxl import Workbook
 from reportlab.pdfgen import canvas
 from reportlab.lib.pagesizes import letter
-from django.utils import timezone
 
 @login_required
 def dashboard(request):
@@ -19,7 +18,7 @@ def dashboard(request):
     user = request.user
     transactions = Transaction.objects.filter(user=user)
     
-    now = timezone.localtime(timezone.now())
+    now = datetime.now()
     hour = now.hour
     
     # Determine greeting and gradient
