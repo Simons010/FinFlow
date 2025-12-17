@@ -24,7 +24,7 @@
                     {% endfor %}
                 </select>
 
-                <button type="submit" class="px-3 md:px-4 py-2 text-sm bg-custom-accent text-custom-accent-foreground rounded-lg hover:bg-custom-accent/90 transition-colors whitespace-nowrap">
+                <button type="submit" class="px-3 md:px-4 py-2 text-sm bg-blue-800 text-custom-accent-foreground rounded-lg hover:bg-custom-accent/90 transition-colors whitespace-nowrap">
                     Filter
                 </button>
             </form>
@@ -54,7 +54,7 @@
                 <td class="px-3 md:px-6 py-3 md:py-4 text-xs md:text-sm">{{ transaction.description }}</td>
                 <td class="hidden sm:table-cell px-3 md:px-6 py-3 md:py-4 text-xs md:text-sm">{{ transaction.category.name }}</td>
                 <td class="hidden md:table-cell px-3 md:px-6 py-3 md:py-4 text-xs md:text-sm">
-                    <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium {% if transaction.transaction_type == 'income' %}bg-green-100 text-green-700{% else %}bg-red-100 text-red-700{% endif %}">
+                    <span class="inline-flex items-center px-2 py-2 rounded-xl text-xs font-medium {% if transaction.transaction_type == 'income' %}bg-green-100 text-green-800{% else %}bg-red-100 text-red-800{% endif %}">
                         {{ transaction.get_transaction_type_display }}
                     </span>
                 </td>
