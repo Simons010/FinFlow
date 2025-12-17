@@ -11,12 +11,27 @@ import csv
 from openpyxl import Workbook
 from reportlab.pdfgen import canvas
 from reportlab.lib.pagesizes import letter
+from django.utils import timezone
 
 @login_required
 def dashboard(request):
     """Dashboard view with financial overview"""
     user = request.user
     transactions = Transaction.objects.filter(user=user)
+    
+    now = timezone.localtime(timezone.now())
+    hour = now.hour
+    
+    # Determine greeting and gradient
+    if hour < 12:
+        greeting = "Good morning"
+        gradient_class = "bg-gradient-to-r from-blue-900 to-blue-300"
+    elif hour < 18:
+        greeting = "Good afternoon"
+        gradient_class = "bg-gradient-to-r from-yellow-900 to-yellow-300"
+    else:
+        greeting = "Good evening"
+        gradient_class = "bg-gradient-to-r from-purple-900 to-purple-300"
     
     # Calculate statistics
     total_income = transactions.filter(transaction_type='income').aggregate(
@@ -27,7 +42,7 @@ def dashboard(request):
     profit_margin = (net_profit / total_income * 100) if total_income > 0 else Decimal('0')
     
     # Recent transactions
-    recent_transactions = transactions[:5]
+    recent_transactions = transactions[:10]
     
     # Monthly data for charts
     today = datetime.today()
@@ -66,6 +81,9 @@ def dashboard(request):
         'profit_margin': float(profit_margin),
         'recent_transactions': recent_transactions,
         'monthly_data': monthly_data,
+        'greeting' : greeting,
+        'gradient_class': gradient_class,
+        'now': now,
     }
     
     return render(request, 'finflow/dashboard.html', context)
@@ -212,15 +230,10 @@ def reports(request):
         if expense_categories_data else "None"
     )
 
-    # -----------------------------
     # TRANSACTION COUNTS
-    # -----------------------------
     income_transactions = transactions.filter(transaction_type='income').count()
     expense_transactions = transactions.filter(transaction_type='expense').count()
 
-    # -----------------------------
-    # CHART LOGIC (UNTOUCHED)
-    # -----------------------------
     monthly_data = []
     today = datetime.today().replace(day=1)
 
@@ -254,9 +267,6 @@ def reports(request):
     # Top income sources (bar chart)
     top_income_sources = sorted(income_categories, key=lambda x: x['amount'], reverse=True)[:5]
 
-    # -----------------------------
-    # CONTEXT
-    # -----------------------------
     context = {
         # Cards
         "total_income": float(total_income),
@@ -304,7 +314,6 @@ def settings(request):
         user.save()
         
         profile.business_name = request.POST.get('business_name', '')
-        profile.current_year = datetime.now().year
         
         if 'business_logo' in request.FILES:
             profile.business_logo = request.FILES['business_logo']

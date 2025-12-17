@@ -5,42 +5,61 @@
 {% block page_title %}Dashboard{% endblock %}
 
 {% block content %}
+<!-- Welcome Banner -->
+<div class="rounded-lg p-4 md:p-6 mb-6 md:mb-8 {{gradient_class}} hover:shadow-lg transition-shadow">
+    <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 rounded-lg p-4 md:p-6">
+        <div>
+            <h2 class="text-lg md:text-3xl font-bold mb-2 text-white">{{greeting}}, {{user.username}}!</h2>
+            <p class="text-sm text-slate-300">Here's a summary of your financial activities.</p>
+        </div>
+        <div class="w-14 md:w-20 lg:w-24 hidden lg:block rounded-full overflow-hidden bg-white">
+            {% if user.profile.business_logo %}
+                <img src="{{ user.profile.business_logo.url }}" class="w-full h-full object-cover">
+            {% else %}
+                <img src="{% static 'images/FinFlow-logo.png' %}"
+                        alt="FinFlow-Logo"
+                        class="w-full h-full object-contain">
+            {% endif %}
+        </div>
+    </div>
+</div>
+
 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4 mb-6 md:mb-8">
     <!-- Stat Cards -->
-    <div class="bg-card border border-border rounded-lg p-4 md:p-6 shadow-sm hover:scale-[1.03] animate-stats" style="animation-delay: 0.1s;">
-        <div class="flex items-start justify-between mb-2">
-            <h3 class="text-xs md:text-sm font-medium text-muted-foreground">Total Revenue</h3>
+    <div class="bg-blue-800 border border-custom-border rounded-lg p-4 md:p-8 shadow-sm hover:scale-[1.03] animate-stats flex flex-col gap-3" style="animation-delay: 1s;">
+        <div class="flex items-start justify-between mb-2 ">
+            <h3 class="text-xs md:text-sm text-slate-300 font-semibold">Total Revenue</h3>
             <span class="text-xl md:text-2xl">💰</span>
         </div>
-        <p class="text-2xl md:text-3xl font-bold text-accent">Ksh {{ total_income|floatformat:2 }}</p>
-        <p class="text-xs text-muted-foreground mt-2">Income transactions</p>
+        <p class="text-2xl md:text-3xl font-bold text-neutral-100">Ksh {{ total_income|floatformat:2 }}</p>
+        <p class="text-xs mt-2 text-slate-300">Income transactions</p>
     </div>
 
-    <div class="bg-card border border-border rounded-lg p-4 md:p-6 shadow-sm">
+    <div class="bg-custom-card border border-custom-border rounded-lg p-4 md:p-8 shadow-sm hover:scale-[1.03] animate-stats flex flex-col gap-3 bg-red-700" style="animation-delay: 1s;">
         <div class="flex items-start justify-between mb-2">
-            <h3 class="text-xs md:text-sm font-medium text-muted-foreground">Total Expenses</h3>
+            <h3 class="text-xs md:text-sm  text-slate-300 font-semibold">Total Expenses</h3>
             <span class="text-xl md:text-2xl">💸</span>
         </div>
-        <p class="text-2xl md:text-3xl font-bold text-destructive">Ksh {{ total_expenses|floatformat:2 }}</p>
-        <p class="text-xs text-muted-foreground mt-2">Expense transactions</p>
+        <p class="text-2xl md:text-3xl font-bold text-neutral-100">Ksh {{ total_expenses|floatformat:2 }}</p>
+        <p class="text-xs mt-2 text-slate-300">Expense transactions</p>
     </div>
 
-    <div class="bg-card border border-border rounded-lg p-4 md:p-6 shadow-sm">
+    <div class="bg-custom-card border border-custom-border rounded-lg p-4 md:p-8 shadow-sm hover:scale-[1.03] animate-stats {% if net_profit >= 0 %}bg-green-600{% else %}bg-custom-card{% endif %} flex flex-col gap-3" style="animation-delay: 1s;">
         <div class="flex items-start justify-between mb-2">
-            <h3 class="text-xs md:text-sm font-medium text-muted-foreground">Net Profit</h3>
-            <span class="text-xl md:text-2xl">📊</span> 
+            <h3 class="text-xs md:text-sm font-semibold text-slate-300">Net Profit</h3>
+            <span class="text-xl md:text-2xl ">📊</span> 
         </div>
-        <p class="text-2xl md:text-3xl font-bold {% if net_profit >= 0 %}text-green-600{% else %}text-destructive{% endif %}">Ksh {{ net_profit|floatformat:2 }}</p>
-        <p class="text-xs text-muted-foreground mt-2">Revenue - Expenses</p>
+        <p class="text-2xl md:text-3xl font-bold {% if net_profit >= 0 %}text-neutral-100{% else %}text-custom-destructive{% endif %}">Ksh {{ net_profit|floatformat:2 }}</p>
+        <p class="text-xs mt-2 text-slate-300">Revenue - Expenses</p>
     </div>
 
-    <div class="bg-card border border-border rounded-lg p-4 md:p-6 shadow-sm">
+    <div class="bg-custom-card border border-custom-border rounded-lg p-4 md:p-8 shadow-sm hover:scale-[1.03] animate-stats flex flex-col gap-3" style="animation-delay: 1s;">
         <div class="flex items-start justify-between mb-2">
-            <h3 class="text-xs md:text-sm font-medium text-muted-foreground">Profit Margin</h3>
+            <h3 class="text-xs md:text-sm font-semibold text-custom-muted-foreground">Profit Margin</h3>
             <span class="text-xl md:text-2xl">📈</span>
         </div>
-        <p class="text-2xl md:text-3xl font-bold text-accent">{{ profit_margin|floatformat:1 }}%</p>
-        <p class="text-xs text-muted-foreground mt-2">Net profit / Revenue</p>
+        <p class="text-2xl md:text-3xl font-bold text-custom-accent">{{ profit_margin|floatformat:1 }}%</p>
+        <p class="text-xs text-custom-muted-foreground mt-2">Net profit / Revenue</p>
     </div>
 </div>
 
@@ -48,7 +67,7 @@
     <!-- Charts Section -->
     <div class="lg:col-span-2 space-y-4 md:space-y-6">
         <!-- Revenue vs Expenses Chart -->
-        <div class="bg-card border border-border rounded-lg p-4 md:p-6 shadow-sm">
+        <div class="bg-custom-card border border-custom-border rounded-lg p-4 md:p-6 shadow-sm">
             <h3 class="text-base md:text-lg font-semibold mb-4">Revenue vs Expenses</h3>
             <div class="relative h-48 md:h-64">
                 <canvas id="revenueChart"></canvas>
@@ -57,14 +76,14 @@
     </div>
 
     <!-- Recent Transactions -->
-    <div class="bg-card border border-border rounded-lg p-4 md:p-6 shadow-sm">
+    <div class="bg-custom-card border border-custom-border rounded-lg p-4 md:p-6 shadow-sm">
         <h3 class="text-base md:text-lg font-semibold mb-4">Recent Transactions</h3>
-        <div class="space-y-3 max-h-96 overflow-y-auto">
+        <div class="space-y-3 max-h-96 overflow-y-auto pr-2">
             {% for transaction in recent_transactions %}
-            <div class="flex items-center justify-between py-2 border-b border-border last:border-b-0 gap-2">
+            <div class="flex items-center justify-between py-2 border-b border-custom-border last:border-b-0 gap-2">
                 <div class="flex-1 min-w-0">
                     <p class="text-xs md:text-sm font-medium truncate">{{ transaction.description }}</p>
-                    <p class="text-xs text-muted-foreground truncate">{{ transaction.category.name }} • {{ transaction.date }}</p>
+                    <p class="text-xs text-custom-muted-foreground truncate">{{ transaction.category.name }} • {{ transaction.date }}</p>
                 </div>
                 <p class="text-xs md:text-sm font-semibold whitespace-nowrap {% if transaction.transaction_type == 'income' %}text-green-600{% else %}text-red-600{% endif %}">
                     {% if transaction.transaction_type == 'income' %}+
@@ -74,7 +93,7 @@
                 </p>
             </div>
             {% empty %}
-            <p class="text-xs md:text-sm text-muted-foreground text-center py-8">No transactions yet</p>
+            <p class="text-xs md:text-sm text-custom-muted-foreground text-center py-8">No transactions yet</p>
             {% endfor %}
         </div>
     </div>

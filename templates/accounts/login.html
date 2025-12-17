@@ -6,8 +6,8 @@
 {% block auth_content %}
 <div class="bg-white rounded-lg shadow-lg p-8 w-full max-w-md">
     <div class="text-center mb-8">
-        <h1 class="text-3xl font-bold text-accent mb-2">FinFlow</h1>
-        <p class="text-muted-foreground">Sign in to your account</p>
+        <h1 class="text-3xl font-bold text-custom-accent mb-2">FinFlow</h1>
+        <p class="text-custom-muted-foreground">Sign in to your account</p>
     </div>
 
     {% if messages %}
@@ -25,21 +25,21 @@
 
         <div>
             <label for="username" class="block text-sm font-medium mb-2">Username</label>
-            <input type="text" id="username" name="username" required class="w-full px-4 py-2 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-accent" placeholder="Enter your username">
+            <input type="text" id="username" name="username" required class="w-full px-4 py-2 border border-custom-border rounded-lg focus:outline-none focus:ring-2 focus:ring-custom-accent" placeholder="Enter your username">
         </div>
 
         <div>
             <label for="password" class="block text-sm font-medium mb-2">Password</label>
-            <input type="password" id="password" name="password" required class="w-full px-4 py-2 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-accent" placeholder="Enter your password">
+            <input type="password" id="password" name="password" required class="w-full px-4 py-2 border border-custom-border rounded-lg focus:outline-none focus:ring-2 focus:ring-custom-accent" placeholder="Enter your password">
         </div>
 
-        <button type="submit" class="w-full px-4 py-2 bg-accent text-accent-foreground rounded-lg font-medium hover:bg-accent/90 transition-colors">
+        <button type="submit" class="w-full px-4 py-2 bg-custom-accent text-custom-accent-foreground rounded-lg font-medium hover:bg-custom-accent/90 transition-colors">
             Sign In
         </button>
     </form>
 
-    <p class="text-center text-sm text-muted-foreground mt-6">
-        Don't have an account? <a href="{% url 'register' %}" class="text-accent hover:underline">Create one</a>
+    <p class="text-center text-sm text-custom-muted-foreground mt-6">
+        Don't have an account? <a href="{% url 'register' %}" class="text-custom-accent hover:underline">Create one</a>
     </p>
 </div>
 {% endblock %}

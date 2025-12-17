@@ -7,7 +7,7 @@
 {% block content %}
 <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6">
     <!-- Income Categories -->
-    <div class="bg-card border border-border rounded-lg p-4 md:p-6">
+    <div class="bg-custom-card border border-custom-border rounded-lg p-4 md:p-6">
         <div class="flex items-center justify-between mb-4 md:mb-6">
             <h3 class="text-lg md:text-xl font-semibold">Income Categories</h3>
             <button class="px-3 py-1 text-sm bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors whitespace-nowrap" onclick="showAddCategoryModal('income')">
@@ -18,28 +18,28 @@
         {% if income_categories %}
         <div class="space-y-3">
             {% for category in income_categories %}
-            <div class="flex items-center justify-between p-3 bg-muted rounded-lg hover:bg-muted/80 transition-colors gap-2">
+            <div class="flex items-center justify-between p-3 bg-custom-muted rounded-lg hover:bg-custom-muted/80 transition-colors gap-2">
                 <div class="min-w-0">
                     <p class="text-sm md:text-base font-medium truncate">{{ category.name }}</p>
-                    <p class="text-xs text-muted-foreground">{{ category.transaction_count }} transactions</p>
+                    <p class="text-xs text-custom-muted-foreground">{{ category.transaction_count }} transactions</p>
                 </div>
                 <div class="flex gap-1 md:gap-2 whitespace-nowrap">
-                    <button class="text-accent hover:underline text-xs md:text-sm" onclick="editCategory({{ category.id }})">Edit</button>
+                    <button class="text-custom-accent hover:underline text-xs md:text-sm" onclick="editCategory({{ category.id }})">Edit</button>
                     <form method="POST" action="{% url 'finflow:delete_category' category.id %}" style="display:inline;" onsubmit="return confirm('Are you sure?')">
                         {% csrf_token %}
-                        <button type="submit" class="text-destructive hover:underline text-xs md:text-sm">Delete</button>
+                        <button type="submit" class="text-custom-destructive hover:underline text-xs md:text-sm">Delete</button>
                     </form>
                 </div>
             </div>
             {% endfor %}
         </div>
         {% else %}
-        <p class="text-xs md:text-sm text-muted-foreground text-center py-6">No income categories yet</p>
+        <p class="text-xs md:text-sm text-custom-muted-foreground text-center py-6">No income categories yet</p>
         {% endif %}
     </div>
 
     <!-- Expense Categories -->
-    <div class="bg-card border border-border rounded-lg p-4 md:p-6">
+    <div class="bg-custom-card border border-custom-border rounded-lg p-4 md:p-6">
         <div class="flex items-center justify-between mb-4 md:mb-6">
             <h3 class="text-lg md:text-xl font-semibold">Expense Categories</h3>
             <button class="px-3 py-1 text-sm bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors whitespace-nowrap" onclick="showAddCategoryModal('expense')">
@@ -50,30 +50,30 @@
         {% if expense_categories %}
         <div class="space-y-3">
             {% for category in expense_categories %}
-            <div class="flex items-center justify-between p-3 bg-muted rounded-lg hover:bg-muted/80 transition-colors gap-2">
+            <div class="flex items-center justify-between p-3 bg-custom-muted rounded-lg hover:bg-custom-muted/80 transition-colors gap-2">
                 <div class="min-w-0">
                     <p class="text-sm md:text-base font-medium truncate">{{ category.name }}</p>
-                    <p class="text-xs text-muted-foreground">{{ category.transaction_count }} transactions</p>
+                    <p class="text-xs text-custom-muted-foreground">{{ category.transaction_count }} transactions</p>
                 </div>
                 <div class="flex gap-1 md:gap-2 whitespace-nowrap">
-                    <button class="text-accent hover:underline text-xs md:text-sm" onclick="editCategory({{ category.id }})">Edit</button>
+                    <button class="text-custom-accent hover:underline text-xs md:text-sm" onclick="editCategory({{ category.id }})">Edit</button>
                     <form method="POST" action="{% url 'finflow:delete_category' category.id %}" style="display:inline;" onsubmit="return confirm('Are you sure?')">
                         {% csrf_token %}
-                        <button type="submit" class="text-destructive hover:underline text-xs md:text-sm">Delete</button>
+                        <button type="submit" class="text-custom-destructive hover:underline text-xs md:text-sm">Delete</button>
                     </form>
                 </div>
             </div>
             {% endfor %}
         </div>
         {% else %}
-        <p class="text-xs md:text-sm text-muted-foreground text-center py-6">No expense categories yet</p>
+        <p class="text-xs md:text-sm text-custom-muted-foreground text-center py-6">No expense categories yet</p>
         {% endif %}
     </div>
 </div>
 
 <!-- Add Category Modal -->
 <div id="addCategoryModal" class="hidden fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-    <div class="bg-card rounded-lg p-4 md:p-6 w-full max-w-md shadow-xl max-h-screen overflow-y-auto">
+    <div class="bg-custom-card rounded-lg p-4 md:p-6 w-full max-w-md shadow-xl max-h-screen overflow-y-auto">
         <h3 class="text-lg md:text-xl font-semibold mb-4">Add Category</h3>
         
         <form method="POST" class="space-y-4" action="{% url 'finflow:add_category' %}">
@@ -81,16 +81,16 @@
 
             <div>
                 <label class="block text-sm font-medium mb-2">Name</label>
-                <input type="text" name="name" required class="w-full px-3 md:px-4 py-2 text-sm border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-accent" placeholder="Enter category name">
+                <input type="text" name="name" required class="w-full px-3 md:px-4 py-2 text-sm border border-custom-border rounded-lg focus:outline-none focus:ring-2 focus:ring-custom-accent" placeholder="Enter category name">
             </div>
 
             <input type="hidden" name="category_type" id="categoryType" value="">
 
             <div class="flex flex-col sm:flex-row gap-3 pt-4">
-                <button type="button" onclick="closeAddCategoryModal()" class="flex-1 px-4 py-2 text-sm border border-border rounded-lg hover:bg-muted transition-colors">
+                <button type="button" onclick="closeAddCategoryModal()" class="flex-1 px-4 py-2 text-sm border border-custom-border rounded-lg hover:bg-custom-muted transition-colors">
                     Cancel
                 </button>
-                <button type="submit" class="flex-1 px-4 py-2 text-sm bg-accent text-accent-foreground rounded-lg hover:bg-accent/90 transition-colors">
+                <button type="submit" class="flex-1 px-4 py-2 text-sm bg-custom-accent text-custom-accent-foreground rounded-lg hover:bg-custom-accent/90 transition-colors">
                     Add Category
                 </button>
             </div>

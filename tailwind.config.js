@@ -2,35 +2,22 @@
 export default {
   darkMode: ["class"],
   content: [
-    "./templates/**/*.{html,js}",
-    "./**/templates/**/*.{html,js}",
-    "./static/**/*.{js,jsx,ts,tsx}",
-    "./**/static/**/*.{js,jsx,ts,tsx}",
+    "./templates/**/*.html",
+    "./static/**/*.html",
+    "./static/**/*.js",
+    "./**/*.html",
   ],
   safelist: [
-    // Colors from variables
-    'bg-card',
-    'bg-accent',
-    'bg-destructive',
-    'bg-muted',
-    'bg-green-50',
-    'bg-red-50',
-    'bg-blue-50',
-    'bg-green-600',
-    'bg-red-600',
-    'text-accent',
-    'text-foreground',
-    'text-muted-foreground',
-    'text-destructive',
-    'text-green-600',
-    'text-red-600',
-    'border-border',
-    'border-green-200',
-    'border-red-200',
-    'border-blue-200',
-    'text-green-800',
-    'text-red-800',
-    'text-blue-800',
+    // Colors from custom variables
+    'bg-custom-card',
+    'bg-custom-accent',
+    'bg-custom-destructive',
+    'bg-custom-muted',
+    'text-custom-accent',
+    'text-custom-foreground',
+    'text-custom-muted-foreground',
+    'text-custom-destructive',
+    'border-custom-border',
     // Responsive breakpoint variants
     'lg:hidden',
     'lg:block',
@@ -53,69 +40,70 @@ export default {
     },
     extend: {
       colors: {
-        border: "hsl(var(--border))",
-        input: "hsl(var(--input))",
-        ring: "hsl(var(--ring))",
-        background: "hsl(var(--background))",
-        foreground: "hsl(var(--foreground))",
-        primary: {
-          DEFAULT: "hsl(var(--primary))",
-          foreground: "hsl(var(--primary-foreground))",
+        // Custom variables (non-conflicting namespace)
+        'custom-border': "hsl(var(--tw-custom-border))",
+        'custom-input': "hsl(var(--tw-custom-input))",
+        'custom-ring': "hsl(var(--tw-custom-ring))",
+        'custom-background': "hsl(var(--tw-custom-background))",
+        'custom-foreground': "hsl(var(--tw-custom-foreground))",
+        'custom-primary': {
+          DEFAULT: "hsl(var(--tw-custom-primary))",
+          foreground: "hsl(var(--tw-custom-primary-foreground))",
         },
-        secondary: {
-          DEFAULT: "hsl(var(--secondary))",
-          foreground: "hsl(var(--secondary-foreground))",
+        'custom-secondary': {
+          DEFAULT: "hsl(var(--tw-custom-secondary))",
+          foreground: "hsl(var(--tw-custom-secondary-foreground))",
         },
-        destructive: {
-          DEFAULT: "hsl(var(--destructive))",
-          foreground: "hsl(var(--destructive-foreground))",
+        'custom-destructive': {
+          DEFAULT: "hsl(var(--tw-custom-destructive))",
+          foreground: "hsl(var(--tw-custom-destructive-foreground))",
         },
-        muted: {
-          DEFAULT: "hsl(var(--muted))",
-          foreground: "hsl(var(--muted-foreground))",
+        'custom-muted': {
+          DEFAULT: "hsl(var(--tw-custom-muted))",
+          foreground: "hsl(var(--tw-custom-muted-foreground))",
         },
-        accent: {
-          DEFAULT: "hsl(var(--accent))",
-          foreground: "hsl(var(--accent-foreground))",
+        'custom-accent': {
+          DEFAULT: "hsl(var(--tw-custom-accent))",
+          foreground: "hsl(var(--tw-custom-accent-foreground))",
         },
-        success: {
-          DEFAULT: "hsl(var(--success))",
-          foreground: "hsl(var(--success-foreground))",
+        'custom-success': {
+          DEFAULT: "hsl(var(--tw-custom-success))",
+          foreground: "hsl(var(--tw-custom-success-foreground))",
         },
-        warning: {
-          DEFAULT: "hsl(var(--warning))",
-          foreground: "hsl(var(--warning-foreground))",
+        'custom-warning': {
+          DEFAULT: "hsl(var(--tw-custom-warning))",
+          foreground: "hsl(var(--tw-custom-warning-foreground))",
         },
-        popover: {
-          DEFAULT: "hsl(var(--popover))",
-          foreground: "hsl(var(--popover-foreground))",
+        'custom-popover': {
+          DEFAULT: "hsl(var(--tw-custom-popover))",
+          foreground: "hsl(var(--tw-custom-popover-foreground))",
         },
-        card: {
-          DEFAULT: "hsl(var(--card))",
-          foreground: "hsl(var(--card-foreground))",
+        'custom-card': {
+          DEFAULT: "hsl(var(--tw-custom-card))",
+          foreground: "hsl(var(--tw-custom-card-foreground))",
         },
-        sidebar: {
-          DEFAULT: "hsl(var(--sidebar-background))",
-          foreground: "hsl(var(--sidebar-foreground))",
-          primary: "hsl(var(--sidebar-primary))",
-          "primary-foreground": "hsl(var(--sidebar-primary-foreground))",
-          accent: "hsl(var(--sidebar-accent))",
-          "accent-foreground": "hsl(var(--sidebar-accent-foreground))",
-          border: "hsl(var(--sidebar-border))",
-          ring: "hsl(var(--sidebar-ring))",
+        'custom-sidebar': {
+          DEFAULT: "hsl(var(--tw-custom-sidebar-background))",
+          foreground: "hsl(var(--tw-custom-sidebar-foreground))",
+          primary: "hsl(var(--tw-custom-sidebar-primary))",
+          "primary-foreground": "hsl(var(--tw-custom-sidebar-primary-foreground))",
+          accent: "hsl(var(--tw-custom-sidebar-accent))",
+          "accent-foreground": "hsl(var(--tw-custom-sidebar-accent-foreground))",
+          border: "hsl(var(--tw-custom-sidebar-border))",
+          ring: "hsl(var(--tw-custom-sidebar-ring))",
         },
-        chart: {
-          "1": "hsl(var(--chart-1))",
-          "2": "hsl(var(--chart-2))",
-          "3": "hsl(var(--chart-3))",
-          "4": "hsl(var(--chart-4))",
-          "5": "hsl(var(--chart-5))",
+        'custom-chart': {
+          "1": "hsl(var(--tw-custom-chart-1))",
+          "2": "hsl(var(--tw-custom-chart-2))",
+          "3": "hsl(var(--tw-custom-chart-3))",
+          "4": "hsl(var(--tw-custom-chart-4))",
+          "5": "hsl(var(--tw-custom-chart-5))",
         },
       },
       borderRadius: {
-        lg: "var(--radius)",
-        md: "calc(var(--radius) - 2px)",
-        sm: "calc(var(--radius) - 4px)",
+        lg: "var(--tw-custom-radius)",
+        md: "calc(var(--tw-custom-radius) - 2px)",
+        sm: "calc(var(--tw-custom-radius) - 4px)",
       },
     },
   },

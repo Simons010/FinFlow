@@ -8,7 +8,7 @@
 <!-- P&L Statement -->
 <div class="mb-4 md:mb-6 flex justify-between items-center">
     <h2 class="text-sm md:text-xl md:font-bold">Profit & Loss Statement</h2>
-    <div class="inline-flex gap-2 items-center px-3 py-2 md:px-4 md:py-2 bg-accent text-white rounded-lg hover:bg-muted hover:shadow-lg transition-all duration-200 text-sm md:text-base">
+    <div class="inline-flex gap-2 items-center px-3 py-2 md:px-4 md:py-2 bg-custom-accent text-white rounded-lg hover:bg-custom-muted hover:shadow-lg transition-all duration-200 text-sm md:text-base">
         <button type="submit" onclick="openExportModal()">Export Report </button>
         <i class="fa-solid fa-download"></i>
     </div>
@@ -17,8 +17,8 @@
 <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 md:gap-6 mb-6 md:mb-8">
 
     <!-- Total Income Card -->
-    <div class="bg-card border border-border rounded-xl p-4 md:p-4">
-        <p class="text-xs md:text-sm text-muted-foreground mb-2">Total Income</p>
+    <div class="bg-custom-card border border-custom-border rounded-xl p-4 md:p-4">
+        <p class="text-xs md:text-sm text-custom-muted-foreground mb-2">Total Income</p>
 
         <!-- Animated Number -->
         <p id="incomeValue" 
@@ -28,26 +28,26 @@
         </p>
 
         <div class="mt-4 space-y-1 text-xs md:text-sm grid gap-1">
-            <p class="text-muted-foreground">
+            <p class="text-custom-muted-foreground">
                 <span class="font-medium text-green-600">
-                    ↑ {{ income_change_percent }}%
+                     {{ income_change_percent }}%
                 </span>
                 compared to last month
             </p>
 
-            <p class="text-muted-foreground">
+            <p class="text-custom-muted-foreground">
                 Top source: <span class="font-semibold">{{ top_income_category }}</span>
             </p>
 
-            <p class="text-muted-foreground">
+            <p class="text-custom-muted-foreground">
                 Transactions: <span class="font-semibold">{{ income_transactions }}</span>
             </p>
         </div>
     </div>
 
     <!-- Total Expenses Card -->
-    <div class="bg-card border border-border rounded-xl p-4 md:p-4">
-        <p class="text-xs md:text-sm text-muted-foreground mb-2">Total Expenses</p>
+    <div class="bg-custom-card border border-custom-border rounded-xl p-4 md:p-4">
+        <p class="text-xs md:text-sm text-custom-muted-foreground mb-2">Total Expenses</p>
 
         <!-- Animated Number -->
         <p id="expensesValue" 
@@ -57,26 +57,26 @@
         </p>
 
         <div class="mt-4 space-y-1 text-xs md:text-sm grid gap-1">
-            <p class="text-muted-foreground">
+            <p class="text-custom-muted-foreground">
                 <span class="font-medium text-red-600">
-                   ↓ {{ expense_change_percent }}%
+                    {{ expense_change_percent }}%
                 </span>
                 change from last month
             </p>
 
-            <p class="text-muted-foreground">
+            <p class="text-custom-muted-foreground">
                 Biggest category: <span class="font-semibold">{{ top_expense_category }}</span>
             </p>
 
-            <p class="text-muted-foreground">
+            <p class="text-custom-muted-foreground">
                 Transactions: <span class="font-semibold">{{ expense_transactions }}</span>
             </p>
         </div>
     </div>
 
     <!-- Net Profit Card -->
-    <div class="bg-card border border-border rounded-xl p-4 md:p-4">
-        <p class="text-xs md:text-sm text-muted-foreground mb-2">Net Profit</p>
+    <div class="bg-custom-card border border-custom-border rounded-xl p-4 md:p-4">
+        <p class="text-xs md:text-sm text-custom-muted-foreground mb-2">Net Profit</p>
 
         <!-- Animated Number -->
         <p id="profitValue" 
@@ -87,7 +87,7 @@
         </p>
 
         <div class="mt-4 space-y-1 text-xs md:text-sm grid gap-1">
-            <p class="text-muted-foreground">
+            <p class="text-custom-muted-foreground">
                 <span class="font-medium 
                     {% if net_profit_change >= 0 %}text-green-600{% else %}text-red-600{% endif %}">
                     {{ net_profit_change }}%
@@ -95,14 +95,14 @@
                 change from last month
             </p>
 
-            <p class="text-muted-foreground">
+            <p class="text-custom-muted-foreground">
                 Profit margin: 
                 <span class="font-semibold">
                     {{ profit_margin }}%
                 </span>
             </p>
 
-            <p class="text-muted-foreground">
+            <p class="text-custom-muted-foreground">
                 Status:
                 <span class="font-semibold 
                     {% if net_profit >= 0 %}text-green-600{% else %}text-red-600{% endif %}">
@@ -117,7 +117,7 @@
 
 <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6 mb-6">
     <!-- Monthly Breakdown Chart -->
-    <div class="bg-card border border-border rounded-lg p-4 md:p-6">
+    <div class="bg-custom-card border border-custom-border rounded-lg p-4 md:p-6">
         <h3 class="text-base md:text-lg font-semibold mb-4">Monthly Breakdown</h3>
         <div class="relative h-48 md:h-64">
             <canvas id="monthlyChart"></canvas>
@@ -125,7 +125,7 @@
     </div>
 
     <!-- Net Profit Trend -->
-    <div class="bg-card border border-border rounded-lg p-4 md:p-6">
+    <div class="bg-custom-card border border-custom-border rounded-lg p-4 md:p-6">
         <h3 class="text-base md:text-lg font-semibold mb-4">Net Profit Trend</h3>
         <div class="relative h-48 md:h-64">
             <canvas id="netProfitChart"></canvas>
@@ -135,7 +135,7 @@
 
 <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6">
     <!-- Expenses by Category (Doughnut) -->
-    <div class="bg-card border border-border rounded-lg p-4 md:p-6">
+    <div class="bg-custom-card border border-custom-border rounded-lg p-4 md:p-6">
         <h3 class="text-base md:text-lg font-semibold mb-4">Spending by Category</h3>
         <div class="relative h-48 md:h-64">
             <canvas id="expensesCategoryChart"></canvas>
@@ -143,7 +143,7 @@
     </div>
 
     <!-- Top 5 Income Sources (Bar Chart) -->
-    <div class="bg-card border border-border rounded-lg p-4 md:p-6">
+    <div class="bg-custom-card border border-custom-border rounded-lg p-4 md:p-6">
         <h3 class="text-base md:text-lg font-semibold mb-4">Top 5 Income Sources</h3>
         <div class="relative h-48 md:h-64">
             <canvas id="topIncomeChart"></canvas>
@@ -159,23 +159,23 @@
 
         <div class="flex flex-col gap-2 mb-2">
             <a href="{% url 'finflow:export_report_csv' %}"
-               class="bg-accent text-white py-2 rounded-lg text-center hover:bg-muted">
+               class="bg-custom-accent text-white py-2 rounded-lg text-center hover:bg-custom-muted">
                 Export as CSV
             </a>
 
             <a href="{% url 'finflow:export_report_excel' %}"
-               class="bg-green-600 text-white py-2 rounded-lg text-center hover:bg-muted">
+               class="bg-green-600 text-white py-2 rounded-lg text-center hover:bg-custom-muted">
                 Export as Excel
             </a>
 
             <a href="{% url 'finflow:export_report_pdf' %}"
-               class="bg-red-600 text-white py-2 rounded-lg text-center hover:bg-muted">
+               class="bg-red-600 text-white py-2 rounded-lg text-center hover:bg-custom-muted">
                 Export as PDF
             </a>
         </div>
 
         <button onclick="closeExportModal()"
-                class="mt-4 w-full py-2 bg-gray-300 dark:bg-gray-700 rounded-lg hover:bg-gray-400 dark:hover:bg-gray-600 border border-border">
+                class="mt-4 w-full py-2 bg-gray-300 dark:bg-gray-700 rounded-lg hover:bg-gray-400 dark:hover:bg-gray-600 border border-custom-border">
             Cancel
         </button>
     </div>
