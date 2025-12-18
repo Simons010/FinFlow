@@ -8,10 +8,7 @@
 <!-- P&L Statement -->
 <div class="mb-4 md:mb-6 flex justify-between items-center">
     <h2 class="text-sm md:text-xl md:font-bold">Profit & Loss Statement</h2>
-    <div class="inline-flex gap-2 items-center px-3 py-2 md:px-4 md:py-2 bg-blue-800  text-white rounded-lg hover:bg-custom-muted hover:shadow-lg hover:text-red-700 transition-all duration-200 text-sm md:text-base">
-        <button type="submit" onclick="openExportModal()">Export Report </button>
-        <i class="fa-solid fa-download"></i>
-    </div>
+    <button type="submit" onclick="openExportModal()" class="flex gap-3 items-center px-3 py-2 md:px-4 md:py-2 bg-blue-800  text-white rounded-lg hover:bg-transparent hover:shadow-lg hover:text-blue-800 border border-blue-800 transition-all duration-200 text-sm md:text-base active:scale-95 active:text-red-600 active:border-red-600">Export Report <i class="fa-solid fa-download"></i></button>
 </div>
 
 <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 md:gap-6 mb-6 md:mb-8">
@@ -152,30 +149,30 @@
 </div>
 
 <!-- Export Modal -->
-<div id="exportModal" class="hidden fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-    <div class="bg-white dark:bg-gray-900 p-6 rounded-xl w-120 shadow-xl px-4 py-4">
+<div id="exportModal" class="hidden fixed inset-0 bg-black/50 flex items-center justify-center z-50 backdrop-blur-sm">
+    <div class="bg-white dark:bg-gray-900 md:p-8 rounded-xl w-80 shadow-xl px-4 py-4">
         <h2 class="text-lg font-semibold mb-4">Export Report</h2>
         <p class="text-sm text-gray-600 dark:text-gray-400 mb-4">Choose export format:</p>
 
-        <div class="flex flex-col gap-2 mb-2">
+        <div class="flex flex-col gap-3 mb-2">
             <a href="{% url 'finflow:export_report_csv' %}"
-               class="bg-custom-accent text-white py-2 rounded-lg text-center hover:bg-custom-muted">
+               class="bg-custom-accent text-white py-2 rounded-lg text-center hover:bg-transparent hover:bg-blue-800">
                 Export as CSV
             </a>
 
             <a href="{% url 'finflow:export_report_excel' %}"
-               class="bg-green-600 text-white py-2 rounded-lg text-center hover:bg-custom-muted">
+               class="bg-green-600 text-white py-2 rounded-lg text-center hover:bg-green-800">
                 Export as Excel
             </a>
 
             <a href="{% url 'finflow:export_report_pdf' %}"
-               class="bg-red-600 text-white py-2 rounded-lg text-center hover:bg-custom-muted">
+               class="bg-red-600 text-white py-2 rounded-lg text-center hover:bg-red-800">
                 Export as PDF
             </a>
         </div>
 
         <button onclick="closeExportModal()"
-                class="mt-4 w-full py-2 bg-gray-300 dark:bg-gray-700 rounded-lg hover:bg-gray-400 dark:hover:bg-gray-600 border border-custom-border">
+                class="mt-4 w-full py-2 bg-gray-300 bg-transparent  dark:bg-gray-700 rounded-lg hover:bg-gray-400 dark:hover:bg-gray-600 border border-custom-border transition-colors hover:text-white">
             Cancel
         </button>
     </div>

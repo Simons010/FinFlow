@@ -25,7 +25,7 @@ def dashboard(request):
     if hour < 12:
         greeting = "Good morning"
         gradient_class = "bg-gradient-to-r from-blue-900 to-blue-300"
-    elif hour < 18:
+    elif hour < 17:
         greeting = "Good afternoon"
         gradient_class = "bg-gradient-to-r from-yellow-900 to-yellow-300"
     else:

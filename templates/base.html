@@ -84,7 +84,7 @@
 
 
         <nav class="space-y-2 px-4 flex-1">
-            <a href="{% url 'finflow:dashboard' %}" class="flex items-center gap-3 px-3 py-2 rounded-lg transition-colors hover:bg-custom-muted {% if request.resolver_match.url_name == 'dashboard' %}bg-blue-800 text-custom-accent-foreground{% endif %}">📊 <span class="nav-label">Dashboard</span></a>
+            <a href="{% url 'finflow:dashboard' %}" class="flex items-center gap-3 px-3 py-2 rounded-lg transition-colors hover:bg-custom-muted {% if request.resolver_match.url_name == 'dashboard' %}bg-blue-800 text-custom-accent-foreground {% endif %}">📊 <span class="nav-label">Dashboard</span></a>
             <a href="{% url 'finflow:transactions' %}" class="flex items-center gap-3 px-3 py-2 rounded-lg transition-colors hover:bg-custom-muted {% if request.resolver_match.url_name == 'transactions' %}bg-blue-800 text-custom-accent-foreground{% endif %}">💳 <span class="nav-label">Transactions</span></a>
             <a href="{% url 'finflow:categories' %}" class="flex items-center gap-3 px-3 py-2 rounded-lg transition-colors hover:bg-custom-muted {% if request.resolver_match.url_name == 'categories' %}bg-blue-800 text-custom-accent-foreground{% endif %}">📁 <span class="nav-label">Categories</span></a>
             <a href="{% url 'finflow:reports' %}" class="flex items-center gap-3 px-3 py-2 rounded-lg transition-colors hover:bg-custom-muted {% if request.resolver_match.url_name == 'reports' %}bg-blue-800 text-custom-accent-foreground{% endif %}">📈 <span class="nav-label">Reports</span></a>
@@ -106,12 +106,11 @@
                 </div>
             </div>
 
-            <form method="POST" action="{% url 'logout' %}" >
+            <form method="POST" action="{% url 'logout' %}" class="group relative overflow-hidden rounded-lg bg-gradient-to-l from-red-500 to-red-700 shadow-md transition-all duration-500">
+                <span class="absolute inset-0 translate-x-[-100%] bg-white transition-transform duration-500 ease-out group-hover:translate-x-0"></span>
                 {% csrf_token %}
-                <div class="py-3 w-full h-auto rounded-xl bg-custom-destructive text-white gap-4 flex items-center justify-center">
-                    <i class="fa-solid fa-arrow-right-from-bracket"></i>
-                    <button >Logout</button>
-                </div>
+
+                <button onclick="return confirm('Are you sure you want to logout?')" class="text-white gap-4 flex items-center justify-center relative z-10 duration-500 py-2 px-2 w-full h-auto rounded-xl group-hover:text-red-600 border border-red-400 active:scale-95"><i class="fa-solid fa-arrow-right-from-bracket"></i> Logout</button>
             </form>
         </div>
     </aside>
