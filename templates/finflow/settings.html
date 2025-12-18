@@ -5,83 +5,86 @@
 {% block page_title %}Settings{% endblock %}
 
 {% block content %}
-<div class="max-w-2xl">
-    <!-- Business Information Section -->
-    <div class="bg-custom-card border border-custom-border rounded-lg p-4 md:p-6 mb-4 md:mb-6">
-        <h3 class="text-lg md:text-xl font-semibold mb-4 md:mb-6">Business Information</h3>
 
-        <form method="POST" class="space-y-4" enctype="multipart/form-data">
-            {% csrf_token %}
+<div class="w-fit justify-center flex flex-col gap-6 md:mt-5">
+    <div class="flex md:gap-4 flex-col lg:flex-row justify-evenly items-start w-full">
+        <!-- Business Information Section -->
+        <div class="bg-custom-card border border-custom-border rounded-lg p-4 md:p-6 mb-4 md:mb-6">
+            <h3 class="text-lg md:text-xl font-semibold mb-4 md:mb-6">Business Information</h3>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                    <label for="business-name" class="block text-sm font-medium mb-2">Business Name</label>
-                    <input type="text" name="business_name" value="{{ profile.business_name }}" class="w-full px-3 md:px-4 py-3 text-sm border border-custom-border rounded-lg focus:outline-none focus:ring-2 focus:ring-custom-accent mb-4">
-                </div>
-                <div>
-                    <label for="business-logo" class="block text-sm font-medium mb-2">Business Logo</label>
-                    <div class="flex w-full px-3 md:px-4 py-2 text-sm border border-custom-border rounded-lg focus:outline-none focus:ring-2 focus:ring-custom-accent mb-4 cursor-pointer items-center gap-2">
-                        <i class="fa-solid fa-cloud-arrow-up"></i>
-                       <input type="file" name="business_logo" class=""> 
+            <form method="POST" class="space-y-4" enctype="multipart/form-data">
+                {% csrf_token %}
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label for="business-name" class="block text-sm font-medium mb-2">Business Name</label>
+                        <input type="text" name="business_name" value="{{ profile.business_name }}" class="w-full px-3 md:px-4 py-3 text-sm border border-custom-border rounded-lg focus:outline-none focus:ring-2 focus:ring-custom-accent mb-4">
+                    </div>
+                    <div>
+                        <label for="business-logo" class="block text-sm font-medium mb-2">Business Logo</label>
+                        <div class="flex w-full px-3 md:px-4 py-2 text-sm border border-custom-border rounded-lg focus:outline-none focus:ring-2 focus:ring-custom-accent mb-4 cursor-pointer items-center gap-2 overflow-hidden">
+                            <i class="fa-solid fa-cloud-arrow-up"></i>
+                            <input type="file" name="business_logo"> 
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium mb-2">First Name</label>
+                        <input type="text" name="first_name" value="{{ user.first_name }}" class="w-full px-3 md:px-4 py-2 text-sm border border-custom-border rounded-lg focus:outline-none focus:ring-2 focus:ring-custom-accent">
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium mb-2">Last Name</label>
+                        <input type="text" name="last_name" value="{{ user.last_name }}" class="w-full px-3 md:px-4 py-2 text-sm border border-custom-border rounded-lg focus:outline-none focus:ring-2 focus:ring-custom-accent">
+                    </div>
+
+                    <div class="md:col-span-2">
+                        <label class="block text-sm font-medium mb-2">Email</label>
+                        <input type="email" name="email" value="{{ user.email }}" class="w-full px-3 md:px-4 py-2 text-sm border border-custom-border rounded-lg focus:outline-none focus:ring-2 focus:ring-custom-accent">
                     </div>
                 </div>
+
+                <div class="flex flex-col sm:flex-row gap-3 pt-4">
+                    <button type="submit" class="px-4 md:px-6 py-2 text-sm bg-blue-800 text-custom-accent-foreground rounded-lg hover:bg-blue-600 transition-colors">
+                        Save Changes
+                    </button>
+                    <button type="reset" class="px-4 md:px-6 py-2 text-sm border border-custom-border rounded-lg hover:bg-custom-muted transition-colors">
+                        Cancel
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Currency Settings Section -->
+        <div class="bg-custom-card border border-custom-border rounded-lg p-4 md:p-6 mb-4 md:mb-6 w-full md:max-w-lg">
+            <h3 class="text-lg md:text-xl font-semibold mb-4 md:mb-6">Currency Settings</h3>
+
+            <div class="space-y-4">
                 <div>
-                    <label class="block text-sm font-medium mb-2">First Name</label>
-                    <input type="text" name="first_name" value="{{ user.first_name }}" class="w-full px-3 md:px-4 py-2 text-sm border border-custom-border rounded-lg focus:outline-none focus:ring-2 focus:ring-custom-accent">
+                    <label class="block text-sm font-medium mb-2">Default Currency</label>
+                    <select class="w-full px-3 md:px-4 py-2 text-sm border border-custom-border rounded-lg focus:outline-none focus:ring-2 focus:ring-custom-accent">
+                        <option>KSH (Ksh) - Kenyan Shilling</option>
+                        <option>USD ($) - US Dollar</option>
+                        <option>EUR (€) - Euro</option>
+                        <option>GBP (£) - British Pound</option>
+                        <option>JPY (¥) - Japanese Yen</option>
+                        <option>CAD (C$) - Canadian Dollar</option>
+                    </select>
                 </div>
 
-                <div>
-                    <label class="block text-sm font-medium mb-2">Last Name</label>
-                    <input type="text" name="last_name" value="{{ user.last_name }}" class="w-full px-3 md:px-4 py-2 text-sm border border-custom-border rounded-lg focus:outline-none focus:ring-2 focus:ring-custom-accent">
+                <div class="flex flex-col sm:flex-row gap-3 pt-4">
+                    <button class="px-4 md:px-6 py-2 text-sm bg-blue-800 text-custom-accent-foreground rounded-lg hover:bg-blue-600 transition-colors">
+                        Save Currency
+                    </button>
+                    <button class="px-4 md:px-6 py-2 text-sm border border-custom-border rounded-lg hover:bg-custom-muted transition-colors">
+                        Cancel
+                    </button>
                 </div>
-
-                <div class="md:col-span-2">
-                    <label class="block text-sm font-medium mb-2">Email</label>
-                    <input type="email" name="email" value="{{ user.email }}" class="w-full px-3 md:px-4 py-2 text-sm border border-custom-border rounded-lg focus:outline-none focus:ring-2 focus:ring-custom-accent">
-                </div>
-            </div>
-
-            <div class="flex flex-col sm:flex-row gap-3 pt-4">
-                <button type="submit" class="px-4 md:px-6 py-2 text-sm bg-blue-800 text-custom-accent-foreground rounded-lg hover:bg-blue-600 transition-colors">
-                    Save Changes
-                </button>
-                <button type="reset" class="px-4 md:px-6 py-2 text-sm border border-custom-border rounded-lg hover:bg-custom-muted transition-colors">
-                    Cancel
-                </button>
-            </div>
-        </form>
-    </div>
-
-    <!-- Currency Settings Section -->
-    <div class="bg-custom-card border border-custom-border rounded-lg p-4 md:p-6 mb-4 md:mb-6">
-        <h3 class="text-lg md:text-xl font-semibold mb-4 md:mb-6">Currency Settings</h3>
-
-        <div class="space-y-4">
-            <div>
-                <label class="block text-sm font-medium mb-2">Default Currency</label>
-                <select class="w-full px-3 md:px-4 py-2 text-sm border border-custom-border rounded-lg focus:outline-none focus:ring-2 focus:ring-custom-accent">
-                    <option>KSH (Ksh) - Kenyan Shilling</option>
-                    <option>USD ($) - US Dollar</option>
-                    <option>EUR (€) - Euro</option>
-                    <option>GBP (£) - British Pound</option>
-                    <option>JPY (¥) - Japanese Yen</option>
-                    <option>CAD (C$) - Canadian Dollar</option>
-                </select>
-            </div>
-
-            <div class="flex flex-col sm:flex-row gap-3 pt-4">
-                <button class="px-4 md:px-6 py-2 text-sm bg-blue-800 text-custom-accent-foreground rounded-lg hover:bg-blue-600 transition-colors">
-                    Save Currency
-                </button>
-                <button class="px-4 md:px-6 py-2 text-sm border border-custom-border rounded-lg hover:bg-custom-muted transition-colors">
-                    Cancel
-                </button>
             </div>
         </div>
     </div>
 
     <!-- About Section -->
-    <div class="bg-custom-card border border-custom-border rounded-lg p-4 md:p-6">
+    <div class="bg-custom-card border border-custom-border rounded-lg p-4 md:p-6 xl:mx-24">
         <h3 class="text-lg md:text-xl font-semibold mb-4 md:mb-6">About FinFlow</h3>
 
         <div class="space-y-4 text-xs md:text-sm text-custom-muted-foreground">
@@ -103,4 +106,5 @@
         </div>
     </div>
 </div>
+
 {% endblock %}
