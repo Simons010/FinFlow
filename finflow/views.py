@@ -474,6 +474,35 @@ def add_transaction(request):
         
     return redirect('finflow:transactions')
 
+@login_required
+@require_http_methods(["POST"])
+def update_transaction(request, pk):
+    """Update an existing transaction"""
+    user = request.user
+    transaction = get_object_or_404(Transaction, id=pk, user=user)
+
+    try:
+        date = request.POST.get('date')
+        description = request.POST.get('description')
+        category_id = request.POST.get('category')
+        transaction_type = request.POST.get('type')
+        amount = request.POST.get('amount')
+
+        category = get_object_or_404(Category, id=category_id, user=user)
+
+        transaction.date = date
+        transaction.description = description
+        transaction.category = category
+        transaction.transaction_type = transaction_type
+        transaction.amount = Decimal(amount)
+        transaction.save()
+
+        messages.success(request, 'Transaction updated successfully.')
+    except Exception as e:
+        messages.error(request, f'Error updating transaction: {str(e)}')
+
+    return redirect('finflow:transactions')
+
 
 @login_required
 @require_http_methods(["POST"])
@@ -514,6 +543,8 @@ def delete_category(request, pk):
     category_name = category.name
     category.delete()
     messages.success(request, f'Category "{category_name}" deleted successfully.')
+    
     return redirect('finflow:categories')
+
 
 
