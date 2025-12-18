@@ -16,19 +16,16 @@
         </div>
 
         {% if income_categories %}
-        <div class="space-y-3">
+        <div class="space-y-3" id="incomeList">
             {% for category in income_categories %}
-            <div class="flex items-center justify-between p-3 bg-custom-muted rounded-lg hover:bg-custom-muted/80 transition-colors gap-2">
+            <div class="category-item flex items-center justify-between p-3 bg-custom-muted rounded-lg hover:bg-custom-muted/80 transition-colors gap-2" data-id="{{ category.id }}" data-type="income">
                 <div class="min-w-0">
-                    <p class="text-sm md:text-base font-medium truncate">{{ category.name }}</p>
-                    <p class="text-xs text-custom-muted-foreground">{{ category.transaction_count }} transactions</p>
+                    <p class="text-sm md:text-base font-medium truncate category-name">{{ category.name }}</p>
+                    <p class="text-xs text-custom-muted-foreground category-count">{{ category.transaction_count }} transactions</p>
                 </div>
                 <div class="flex gap-1 md:gap-2 whitespace-nowrap">
-                    <button class="text-blue-800 border border-blue-800 hover:bg-blue-800 hover:text-white px-2 py-1 rounded-lg active:scale-95 text-xs md:text-sm" onclick="editCategory({{ category.id }})">Edit</button>
-                    <form method="POST" action="{% url 'finflow:delete_category' category.id %}" style="display:inline;" onsubmit="return confirm('Are you sure?')">
-                        {% csrf_token %}
-                        <button type="submit" class="text-white bg-red-600 hover:bg-transparent border border-custom-destructive hover:text-custom-destructive px-2 py-1 rounded-lg active:scale-95 text-xs md:text-sm">Delete</button>
-                    </form>
+                    <button class="text-blue-800 border border-blue-800 hover:bg-blue-800 hover:text-white px-2 py-1 rounded-lg active:scale-95 text-xs md:text-sm" onclick="editCategory({{ category.id }}, '{{ category.name|escapejs }}', '{{ category.category_type }}')">Edit</button>
+                    <button class="text-white bg-red-600 hover:bg-transparent border border-custom-destructive hover:text-custom-destructive px-2 py-1 rounded-lg active:scale-95 text-xs md:text-sm" onclick="deleteCategory({{ category.id }})">Delete</button>
                 </div>
             </div>
             {% endfor %}
@@ -48,19 +45,16 @@
         </div>
 
         {% if expense_categories %}
-        <div class="space-y-3">
+        <div class="space-y-3" id="expenseList">
             {% for category in expense_categories %}
-            <div class="flex items-center justify-between p-3 bg-custom-muted rounded-lg hover:bg-custom-muted/80 transition-colors gap-2">
+            <div class="category-item flex items-center justify-between p-3 bg-custom-muted rounded-lg hover:bg-custom-muted/80 transition-colors gap-2" data-id="{{ category.id }}" data-type="expense">
                 <div class="min-w-0">
-                    <p class="text-sm md:text-base font-medium truncate">{{ category.name }}</p>
-                    <p class="text-xs text-custom-muted-foreground">{{ category.transaction_count }} transactions</p>
+                    <p class="text-sm md:text-base font-medium truncate category-name">{{ category.name }}</p>
+                    <p class="text-xs text-custom-muted-foreground category-count">{{ category.transaction_count }} transactions</p>
                 </div>
                 <div class="flex gap-1 md:gap-2 whitespace-nowrap">
-                    <button class="text-blue-800 bg-transparent border hover:bg-blue-800 border-blue-800 hover:text-white px-2 py-1 rounded-lg active:scale-95 text-xs md:text-sm" onclick="editCategory({{ category.id }})">Edit</button>
-                    <form method="POST" action="{% url 'finflow:delete_category' category.id %}" style="display:inline;" onsubmit="return confirm('Are you sure?')">
-                        {% csrf_token %}
-                        <button type="submit" class="text-white bg-red-600 hover:bg-transparent border border-red-600 hover:text-red-600 px-2 py-1 rounded-lg active:scale-95 text-xs md:text-sm">Delete</button>
-                    </form>
+                    <button class="text-blue-800 bg-transparent border hover:bg-blue-800 border-blue-800 hover:text-white px-2 py-1 rounded-lg active:scale-95 text-xs md:text-sm" onclick="editCategory({{ category.id }}, '{{ category.name|escapejs }}', '{{ category.category_type }}')">Edit</button>
+                    <button class="text-white bg-red-600 hover:bg-transparent border border-red-600 hover:text-red-600 px-2 py-1 rounded-lg active:scale-95 text-xs md:text-sm" onclick="deleteCategory({{ category.id }})">Delete</button>
                 </div>
             </div>
             {% endfor %}
@@ -75,16 +69,19 @@
 <div id="addCategoryModal" class="hidden fixed inset-0 backdrop-blur-sm bg-black/50 flex items-center justify-center z-50 p-4">
     <div class="bg-custom-card rounded-lg p-4 md:p-6 w-full max-w-md shadow-xl max-h-screen overflow-y-auto">
         <h3 class="text-lg md:text-xl font-semibold mb-4">Add Category</h3>
+
+        <div id="addMessage" class="hidden mb-4 p-3 rounded-lg text-sm"></div>
         
-        <form method="POST" class="space-y-4" action="{% url 'finflow:add_category' %}">
+        <form id="addCategoryForm" class="space-y-4">
             {% csrf_token %}
 
             <div>
                 <label class="block text-sm font-medium mb-2">Name</label>
-                <input type="text" name="name" required class="w-full px-3 md:px-4 py-2 text-sm border border-custom-border rounded-lg focus:outline-none focus:ring-2 focus:ring-custom-accent" placeholder="Enter category name">
+                <input type="text" name="name" id="addCategoryName" required class="w-full px-3 md:px-4 py-2 text-sm border border-custom-border rounded-lg focus:outline-none focus:ring-2 focus:ring-custom-accent" placeholder="Enter category name">
             </div>
 
             <input type="hidden" name="category_type" id="categoryType" value="">
+            <input type="hidden" name="ajax" value="true">
 
             <div class="flex flex-col sm:flex-row gap-3 pt-4">
                 <button type="button" onclick="closeAddCategoryModal()" class="flex-1 px-4 py-2 text-sm border border-custom-border rounded-lg hover:bg-custom-muted transition-colors">
@@ -98,9 +95,50 @@
     </div>
 </div>
 
+<!-- Edit Category Modal -->
+<div id="editCategoryModal" class="hidden fixed inset-0 backdrop-blur-sm bg-black/50 flex items-center justify-center z-50 p-4">
+    <div class="bg-custom-card rounded-lg p-4 md:p-6 w-full max-w-md shadow-xl max-h-screen overflow-y-auto">
+        <h3 class="text-lg md:text-xl font-semibold mb-4">Edit Category</h3>
+
+        <div id="editMessage" class="hidden mb-4 p-3 rounded-lg text-sm"></div>
+
+        <form id="editCategoryForm" class="space-y-4">
+            {% csrf_token %}
+
+            <div>
+                <label class="block text-sm font-medium mb-2">Name</label>
+                <input type="text" name="name" id="editCategoryName" required class="w-full px-3 md:px-4 py-2 text-sm border border-custom-border rounded-lg focus:outline-none focus:ring-2 focus:ring-custom-accent" placeholder="Enter category name">
+            </div>
+
+            <div>
+                <label class="block text-sm font-medium mb-2">Type</label>
+                <select name="category_type" id="editCategoryType" class="w-full px-3 md:px-4 py-2 text-sm border border-custom-border rounded-lg focus:outline-none focus:ring-2 focus:ring-custom-accent">
+                    <option value="income">Income</option>
+                    <option value="expense">Expense</option>
+                </select>
+            </div>
+
+            <input type="hidden" id="editCategoryId" value="">
+            <input type="hidden" name="ajax" value="true">
+
+            <div class="flex flex-col sm:flex-row gap-3 pt-4">
+                <button type="button" onclick="closeEditCategoryModal()" class="flex-1 px-4 py-2 text-sm border border-custom-border rounded-lg hover:bg-custom-muted transition-colors">
+                    Cancel
+                </button>
+                <button type="submit" class="flex-1 px-4 py-2 text-sm bg-blue-800 text-custom-accent-foreground rounded-lg hover:bg-custom-accent/90 transition-colors">
+                    Save Changes
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
 <script>
+    // Show/close add modal
     function showAddCategoryModal(type) {
         document.getElementById('categoryType').value = type;
+        document.getElementById('addCategoryName').value = '';
+        document.getElementById('addMessage').classList.add('hidden');
         document.getElementById('addCategoryModal').classList.remove('hidden');
     }
 
@@ -108,13 +146,170 @@
         document.getElementById('addCategoryModal').classList.add('hidden');
     }
 
-    function editCategory(id) {
-        alert('Edit category ' + id + ' - implement as needed');
+    // Show/close edit modal
+    function editCategory(id, name, type) {
+        document.getElementById('editCategoryId').value = id;
+        document.getElementById('editCategoryName').value = name;
+        document.getElementById('editCategoryType').value = type;
+        document.getElementById('editMessage').classList.add('hidden');
+        document.getElementById('editCategoryModal').classList.remove('hidden');
     }
 
+    function closeEditCategoryModal() {
+        document.getElementById('editCategoryModal').classList.add('hidden');
+    }
+
+    // Show message in modal
+    function showMessage(elementId, message, isSuccess) {
+        const msgEl = document.getElementById(elementId);
+        msgEl.textContent = message;
+        msgEl.className = isSuccess 
+            ? 'p-3 rounded-lg text-sm bg-green-100 text-green-800'
+            : 'p-3 rounded-lg text-sm bg-red-100 text-red-800';
+        msgEl.classList.remove('hidden');
+    }
+
+    // Handle add category form submit via AJAX
+    document.getElementById('addCategoryForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        const formData = new FormData(this);
+        
+        fetch("{% url 'finflow:add_category' %}", {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                showMessage('addMessage', data.message, true);
+                setTimeout(() => {
+                    addCategoryToDOM(data.category, data.category.type);
+                    closeAddCategoryModal();
+                    this.reset();
+                }, 1000);
+            } else {
+                showMessage('addMessage', data.message, false);
+            }
+        })
+        .catch(error => {
+            showMessage('addMessage', 'An error occurred', false);
+            console.error('Error:', error);
+        });
+    });
+
+    // Handle edit category form submit via AJAX
+    document.getElementById('editCategoryForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        const categoryId = document.getElementById('editCategoryId').value;
+        const formData = new FormData(this);
+        
+        fetch("{% url 'finflow:update_category' 0 %}".replace('/0/', '/' + categoryId + '/'), {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                showMessage('editMessage', data.message, true);
+                setTimeout(() => {
+                    updateCategoryInDOM(data.category);
+                    closeEditCategoryModal();
+                }, 1000);
+            } else {
+                showMessage('editMessage', data.message, false);
+            }
+        })
+        .catch(error => {
+            showMessage('editMessage', 'An error occurred', false);
+            console.error('Error:', error);
+        });
+    });
+
+    // Delete category via AJAX
+    function deleteCategory(id) {
+        if (!confirm('Are you sure you want to delete this category?')) return;
+
+        const formData = new FormData();
+        formData.append('csrfmiddlewaretoken', document.querySelector('[name=csrfmiddlewaretoken]').value);
+        formData.append('ajax', 'true');
+
+        fetch("{% url 'finflow:delete_category' 0 %}".replace('/0/', '/' + id + '/'), {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                removeCategoryFromDOM(id);
+                // Show toast or message
+                console.log(data.message);
+            } else {
+                alert(data.message);
+            }
+        })
+        .catch(error => {
+            alert('An error occurred');
+            console.error('Error:', error);
+        });
+    }
+
+    // DOM update functions
+    function addCategoryToDOM(category, type) {
+        const listId = type === 'income' ? 'incomeList' : 'expenseList';
+        const list = document.getElementById(listId);
+        
+        const item = document.createElement('div');
+        item.className = 'category-item flex items-center justify-between p-3 bg-custom-muted rounded-lg hover:bg-custom-muted/80 transition-colors gap-2';
+        item.setAttribute('data-id', category.id);
+        item.setAttribute('data-type', type);
+        item.innerHTML = `
+            <div class="min-w-0">
+                <p class="text-sm md:text-base font-medium truncate category-name">${category.name}</p>
+                <p class="text-xs text-custom-muted-foreground category-count">${category.transaction_count} transactions</p>
+            </div>
+            <div class="flex gap-1 md:gap-2 whitespace-nowrap">
+                <button class="text-blue-800 border border-blue-800 hover:bg-blue-800 hover:text-white px-2 py-1 rounded-lg active:scale-95 text-xs md:text-sm" onclick="editCategory(${category.id}, '${category.name}', '${type}')">Edit</button>
+                <button class="text-white bg-red-600 hover:bg-transparent border border-custom-destructive hover:text-custom-destructive px-2 py-1 rounded-lg active:scale-95 text-xs md:text-sm" onclick="deleteCategory(${category.id})">Delete</button>
+            </div>
+        `;
+        list.appendChild(item);
+    }
+
+    function updateCategoryInDOM(category) {
+        const item = document.querySelector(`[data-id="${category.id}"]`);
+        if (item) {
+            const oldType = item.getAttribute('data-type');
+            item.setAttribute('data-type', category.type);
+            item.querySelector('.category-name').textContent = category.name;
+            item.querySelector('.category-count').textContent = category.transaction_count + ' transactions';
+            
+            // If type changed, move to different list
+            if (oldType !== category.type) {
+                const oldListId = oldType === 'income' ? 'incomeList' : 'expenseList';
+                const newListId = category.type === 'income' ? 'incomeList' : 'expenseList';
+                document.getElementById(oldListId).removeChild(item);
+                document.getElementById(newListId).appendChild(item);
+            }
+        }
+    }
+
+    function removeCategoryFromDOM(id) {
+        const item = document.querySelector(`[data-id="${id}"]`);
+        if (item) {
+            item.remove();
+        }
+    }
+
+    // Close modals when clicking outside
     document.getElementById('addCategoryModal').addEventListener('click', function(e) {
         if (e.target === this) {
             closeAddCategoryModal();
+        }
+    });
+
+    document.getElementById('editCategoryModal').addEventListener('click', function(e) {
+        if (e.target === this) {
+            closeEditCategoryModal();
         }
     });
 </script>

@@ -521,16 +521,34 @@ def add_category(request):
     user = request.user
     name = request.POST.get('name')
     category_type = request.POST.get('category_type')
+    is_ajax = request.POST.get('ajax') == 'true'
     
     try:
-        Category.objects.create(
+        category = Category.objects.create(
             user=user,
             name=name,
             category_type=category_type
         )
-        messages.success(request, f'Category "{name}" added successfully.')
+        message = f'Category "{name}" added successfully.'
+        if is_ajax:
+            return JsonResponse({
+                'success': True,
+                'message': message,
+                'category': {
+                    'id': category.id,
+                    'name': category.name,
+                    'type': category.category_type,
+                    'transaction_count': category.transaction_count
+                }
+            })
+        else:
+            messages.success(request, message)
     except Exception as e:
-        messages.error(request, f'Error creating category: {str(e)}')
+        error_msg = f'Error creating category: {str(e)}'
+        if is_ajax:
+            return JsonResponse({'success': False, 'message': error_msg}, status=400)
+        else:
+            messages.error(request, error_msg)
     
     return redirect('finflow:categories')
 
@@ -541,10 +559,62 @@ def delete_category(request, pk):
     """Delete a category"""
     category = get_object_or_404(Category, id=pk, user=request.user)
     category_name = category.name
-    category.delete()
-    messages.success(request, f'Category "{category_name}" deleted successfully.')
+    is_ajax = request.POST.get('ajax') == 'true'
+    
+    try:
+        category.delete()
+        message = f'Category "{category_name}" deleted successfully.'
+        if is_ajax:
+            return JsonResponse({'success': True, 'message': message, 'id': pk})
+        else:
+            messages.success(request, message)
+    except Exception as e:
+        error_msg = f'Error deleting category: {str(e)}'
+        if is_ajax:
+            return JsonResponse({'success': False, 'message': error_msg}, status=400)
+        else:
+            messages.error(request, error_msg)
     
     return redirect('finflow:categories')
 
+
+
+@login_required
+@require_http_methods(["POST"])
+def update_category(request, pk):
+    """Update an existing category"""
+    user = request.user
+    category = get_object_or_404(Category, id=pk, user=user)
+
+    name = request.POST.get('name')
+    category_type = request.POST.get('category_type', category.category_type)
+    is_ajax = request.POST.get('ajax') == 'true'
+
+    try:
+        category.name = name
+        category.category_type = category_type
+        category.save()
+        message = f'Category "{name}" updated successfully.'
+        if is_ajax:
+            return JsonResponse({
+                'success': True,
+                'message': message,
+                'category': {
+                    'id': category.id,
+                    'name': category.name,
+                    'type': category.category_type,
+                    'transaction_count': category.transaction_count
+                }
+            })
+        else:
+            messages.success(request, message)
+    except Exception as e:
+        error_msg = f'Error updating category: {str(e)}'
+        if is_ajax:
+            return JsonResponse({'success': False, 'message': error_msg}, status=400)
+        else:
+            messages.error(request, error_msg)
+
+    return redirect('finflow:categories')
 
 
